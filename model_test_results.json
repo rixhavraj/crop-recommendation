@@ -1,0 +1,145 @@
+{
+  "summary": "Model Stress Test Report",
+  "results": [
+    {
+      "test_name": "Extreme Drought (Rajasthan Summer)",
+      "input": {
+        "name": "Extreme Drought (Rajasthan Summer)",
+        "weather": {
+          "avg_temp_max": 45,
+          "total_rain": 10,
+          "heat_stress_days": 25,
+          "month": 6
+        },
+        "soil": {
+          "soil_type": "sandy",
+          "soil_ph": 8.5,
+          "organic_matter_pct": 0.3
+        },
+        "state": "Rajasthan"
+      },
+      "top_recommendations": [
+        {
+          "crop": "Sorghum (Jowar)",
+          "confidence": 97.7,
+          "reason": "Sorghum (Jowar) is idealy suited for sandy soil. This selection is optimized for your land's specific profile."
+        },
+        {
+          "crop": "Pearl Millet (Bajra)",
+          "confidence": 82.1,
+          "reason": "Pearl Millet (Bajra) is idealy suited for sandy soil. This selection is optimized for your land's specific profile."
+        },
+        {
+          "crop": "Groundnut",
+          "confidence": 80.5,
+          "reason": "Groundnut is idealy suited for sandy soil. This selection is optimized for your land's specific profile."
+        }
+      ]
+    },
+    {
+      "test_name": "Heavy Monsoon (Kerala/Assam)",
+      "input": {
+        "name": "Heavy Monsoon (Kerala/Assam)",
+        "weather": {
+          "avg_temp_max": 28,
+          "total_rain": 1200,
+          "heat_stress_days": 0,
+          "month": 7
+        },
+        "soil": {
+          "soil_type": "clay",
+          "soil_ph": 5.5,
+          "organic_matter_pct": 2.5
+        },
+        "state": "Kerala"
+      },
+      "top_recommendations": [
+        {
+          "crop": "Rice (Paddy)",
+          "confidence": 100.0,
+          "reason": "Rice (Paddy) perfectly matches the 1200mm rainfall, thrives in the 28.0\u00b0C climate. This selection is optimized for your land's specific profile."
+        },
+        {
+          "crop": "Pearl Millet (Bajra)",
+          "confidence": 100.0,
+          "reason": "Pearl Millet (Bajra) perfectly matches the 1200mm rainfall, thrives in the 28.0\u00b0C climate. This selection is optimized for your land's specific profile."
+        },
+        {
+          "crop": "Cotton",
+          "confidence": 100.0,
+          "reason": "Cotton perfectly matches the 1200mm rainfall, thrives in the 28.0\u00b0C climate. This selection is optimized for your land's specific profile."
+        }
+      ]
+    },
+    {
+      "test_name": "Cold Winter (Punjab/Haryana)",
+      "input": {
+        "name": "Cold Winter (Punjab/Haryana)",
+        "weather": {
+          "avg_temp_max": 15,
+          "total_rain": 50,
+          "heat_stress_days": 0,
+          "month": 12
+        },
+        "soil": {
+          "soil_type": "alluvial",
+          "soil_ph": 7.2,
+          "organic_matter_pct": 1.2
+        },
+        "state": "Punjab"
+      },
+      "top_recommendations": [
+        {
+          "crop": "Sugarcane",
+          "confidence": 100.0,
+          "reason": "Sugarcane is idealy suited for alluvial soil. This selection is optimized for your land's specific profile."
+        },
+        {
+          "crop": "Wheat",
+          "confidence": 100.0,
+          "reason": "Wheat thrives in the 15.0\u00b0C climate, is idealy suited for alluvial soil. This selection is optimized for your land's specific profile."
+        },
+        {
+          "crop": "Mustard",
+          "confidence": 100.0,
+          "reason": "Mustard thrives in the 15.0\u00b0C climate, is idealy suited for alluvial soil. This selection is optimized for your land's specific profile."
+        }
+      ]
+    },
+    {
+      "test_name": "Degraded Soil (Central India)",
+      "input": {
+        "name": "Degraded Soil (Central India)",
+        "weather": {
+          "avg_temp_max": 32,
+          "total_rain": 300,
+          "heat_stress_days": 5,
+          "month": 7
+        },
+        "soil": {
+          "soil_type": "black",
+          "soil_ph": 9.2,
+          "organic_matter_pct": 0.1
+        },
+        "state": "Madhya Pradesh"
+      },
+      "top_recommendations": [
+        {
+          "crop": "Cotton",
+          "confidence": 100.0,
+          "reason": "Cotton perfectly matches the 300mm rainfall, thrives in the 32.0\u00b0C climate. This selection is optimized for your land's specific profile."
+        },
+        {
+          "crop": "Sorghum (Jowar)",
+          "confidence": 100.0,
+          "reason": "Sorghum (Jowar) perfectly matches the 300mm rainfall, thrives in the 32.0\u00b0C climate. This selection is optimized for your land's specific profile."
+        },
+        {
+          "crop": "Cluster Bean (Guar)",
+          "confidence": 100.0,
+          "reason": "Cluster Bean (Guar) perfectly matches the 300mm rainfall, thrives in the 32.0\u00b0C climate. This selection is optimized for your land's specific profile."
+        }
+      ]
+    }
+  ]
+}

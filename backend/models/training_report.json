@@ -1,0 +1,23 @@
+{
+  "metadata": {
+    "trained_at": "2026-04-18T21:40:58.536772+00:00",
+    "all_india_samples": 17610,
+    "model_type": "xgboost"
+  },
+  "metrics": {
+    "xgboost": {
+      "accuracy": 0.994,
+      "precision": 0.9961,
+      "recall": 0.9961,
+      "f1": 0.9961,
+      "roc_auc": 0.9998
+    },
+    "random_forest": {
+      "accuracy": 0.992,
+      "precision": 0.995,
+      "recall": 0.9948,
+      "f1": 0.9949,
+      "roc_auc": 0.9997
+    }
+  }
+}

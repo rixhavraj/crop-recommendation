@@ -1,0 +1,50 @@
+{
+  "North": {
+    "states": ["Punjab", "Haryana", "Himachal Pradesh", "Jammu & Kashmir", "Uttarakhand", "Delhi", "Rajasthan"],
+    "historical_success": [
+      {"crop": "Wheat", "avg_profit": 45000, "success_rate": "95%", "notable_year": "2021"},
+      {"crop": "Mustard", "avg_profit": 35000, "success_rate": "90%", "notable_year": "2022"},
+      {"crop": "Rice (Paddy)", "avg_profit": 55000, "success_rate": "88%", "notable_year": "2023"}
+    ]
+  },
+  "South": {
+    "states": ["Tamil Nadu", "Kerala", "Karnataka", "Andhra Pradesh", "Telangana", "Puducherry"],
+    "historical_success": [
+      {"crop": "Rice (Paddy)", "avg_profit": 60000, "success_rate": "94%", "notable_year": "2020"},
+      {"crop": "Coconut", "avg_profit": 80000, "success_rate": "98%", "notable_year": "Long-term"},
+      {"crop": "Coffee", "avg_profit": 120000, "success_rate": "85%", "notable_year": "2022"}
+    ]
+  },
+  "West": {
+    "states": ["Gujarat", "Maharashtra", "Goa", "Dadra and Nagar Haveli"],
+    "historical_success": [
+      {"crop": "Cotton", "avg_profit": 70000, "success_rate": "92%", "notable_year": "2021"},
+      {"crop": "Groundnut", "avg_profit": 40000, "success_rate": "89%", "notable_year": "2023"},
+      {"crop": "Sugarcane", "avg_profit": 95000, "success_rate": "96%", "notable_year": "2022"}
+    ]
+  },
+  "East": {
+    "states": ["West Bengal", "Odisha", "Bihar", "Jharkhand", "Assam", "Sikkim", "Arunachal Pradesh", "Nagaland", "Manipur", "Mizoram", "Tripura", "Meghalaya"],
+    "historical_success": [
+      {"crop": "Rice (Paddy)", "avg_profit": 50000, "success_rate": "97%", "notable_year": "Annually"},
+      {"crop": "Jute", "avg_profit": 30000, "success_rate": "91%", "notable_year": "2021"},
+      {"crop": "Tea", "avg_profit": 150000, "success_rate": "90%", "notable_year": "Ongoing"}
+    ]
+  },
+  "Central": {
+    "states": ["Madhya Pradesh", "Chhattisgarh", "Uttar Pradesh"],
+    "historical_success": [
+      {"crop": "Soybean", "avg_profit": 38000, "success_rate": "90%", "notable_year": "2022"},
+      {"crop": "Wheat", "avg_profit": 42000, "success_rate": "94%", "notable_year": "2021"},
+      {"crop": "Pulses (Gram)", "avg_profit": 32000, "success_rate": "93%", "notable_year": "2023"}
+    ]
+  },
+  "North-East": {
+    "states": ["Assam", "Arunachal Pradesh", "Nagaland", "Manipur", "Mizoram", "Tripura", "Meghalaya", "Sikkim"],
+    "historical_success": [
+      {"crop": "Rice", "avg_profit": 48000, "success_rate": "96%", "notable_year": "2023"},
+      {"crop": "Pineapple", "avg_profit": 85000, "success_rate": "92%", "notable_year": "2022"},
+      {"crop": "Ginger", "avg_profit": 110000, "success_rate": "89%", "notable_year": "2021"}
+    ]
+  }
+}
