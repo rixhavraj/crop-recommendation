@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 from pathlib import Path
 
 import requests
@@ -14,6 +15,7 @@ SOIL_CACHE_DIR.mkdir(exist_ok=True)
 SOIL_PROPERTIES = ["phh2o", "soc", "clay", "sand", "silt", "nitrogen", "cec"]
 SOIL_DEPTHS = ["0-5cm", "5-15cm", "15-30cm"]
 SOIL_VALUES = ["mean"]
+DEFAULT_UPSTREAM_TIMEOUT = float(os.getenv("UPSTREAM_TIMEOUT_SECONDS", "8"))
 
 
 def _cache_path(lat: float, lon: float) -> Path:
@@ -82,7 +84,7 @@ def _normalise_soil_payload(payload: dict) -> dict:
     }
 
 
-def fetch_soil(lat: float, lon: float, timeout: int = 30) -> dict:
+def fetch_soil(lat: float, lon: float, timeout: float | None = None) -> dict:
     url = "https://rest.isric.org/soilgrids/v2.0/properties/query"
     params = {
         "lon": lon,
@@ -98,7 +100,11 @@ def fetch_soil(lat: float, lon: float, timeout: int = 30) -> dict:
         params.setdefault("value", [])
         params["value"].append(value)
 
-    response = requests.get(url, params=params, timeout=timeout)
+    response = requests.get(
+        url,
+        params=params,
+        timeout=timeout if timeout is not None else DEFAULT_UPSTREAM_TIMEOUT,
+    )
     response.raise_for_status()
     payload = response.json()
     context = _normalise_soil_payload(payload)

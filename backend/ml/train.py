@@ -141,7 +141,8 @@ def build_training_data() -> pd.DataFrame:
             try:
                 soil_sample, _ = get_soil_context(lat=lat, lon=lon)
                 soil_cache[cache_key] = soil_sample
-            except:
+            except Exception as e:
+                print(f"  Warning: Soil lookup failed for {lat}, {lon}: {e}. Using default scenario.")
                 soil_cache[cache_key] = soil_scenarios[0]
         
         real_soil = soil_cache[cache_key]
@@ -255,6 +256,15 @@ def train() -> dict:
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.15, stratify=y, random_state=42)
     model.fit(X_train, y_train)
 
+    # Holdout evaluation
+    y_pred = model.predict(X_test)
+    holdout_metrics = {
+        "accuracy": float(accuracy_score(y_test, y_pred)),
+        "f1": float(f1_score(y_test, y_pred)),
+        "precision": float(precision_score(y_test, y_pred)),
+        "recall": float(recall_score(y_test, y_pred))
+    }
+
     # Save artifacts
     joblib.dump(model, MODELS_DIR / "crop_model.pkl")
     joblib.dump({"crop": crop_encoder}, MODELS_DIR / "encoders.pkl")
@@ -265,12 +275,14 @@ def train() -> dict:
             "all_india_samples": len(df),
             "model_type": best_name
         },
-        "metrics": cv_summary
+        "metrics": cv_summary,
+        "holdout_metrics": holdout_metrics
     }
     with open(MODELS_DIR / "training_report.json", "w") as f:
         json.dump(report, f, indent=2)
 
     print(f"Deep Intelligence Training Complete. Samples: {len(df)}")
+    print(f"Holdout Accuracy: {holdout_metrics['accuracy']:.2%}")
     return report
 
 

@@ -1,5 +1,12 @@
+import asyncio
+
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
+
+from data.fetch_soil import get_soil_context
+from data.fetch_weather import get_weather_data
+from ml.features import engineer_features
+from ml.predict import predict_crops
 
 router = APIRouter()
 
@@ -36,12 +43,15 @@ class CropResult(BaseModel):
 @router.post("/recommend", response_model=list[CropResult])
 async def recommend(req: RecommendRequest):
     try:
-        from data.fetch_soil import get_soil_context
-        from data.fetch_weather import get_weather_data
-        from ml.features import engineer_features
-        from ml.predict import predict_crops
+        weather_task = asyncio.to_thread(
+            get_weather_data,
+            req.lat,
+            req.lon,
+            location_name=req.district,
+        )
+        soil_task = asyncio.to_thread(get_soil_context, req.lat, req.lon)
+        (weather_df, _), (soil_context, _) = await asyncio.gather(weather_task, soil_task)
 
-        weather_df, _ = get_weather_data(req.lat, req.lon, location_name=req.district)
         if weather_df.empty:
             raise HTTPException(status_code=404, detail="No weather data available for this location")
 
@@ -55,8 +65,6 @@ async def recommend(req: RecommendRequest):
             if row.empty:
                 raise HTTPException(status_code=404, detail="No weather data for that period")
 
-        soil_context, _ = get_soil_context(req.lat, req.lon)
-        
         # Override with user inputs if provided
         if req.soil_type: soil_context["soil_type"] = req.soil_type
         if req.soil_ph is not None: soil_context["soil_ph"] = req.soil_ph

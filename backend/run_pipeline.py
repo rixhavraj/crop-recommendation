@@ -62,8 +62,6 @@ with open("models/model_metadata.json", encoding="utf-8") as f:
 print(f"  Model type: {type(model).__name__}")
 print(f"  Selected model name: {metadata['selected_model']}")
 print(f"  Encoded crops: {list(encoders['crop'].classes_)}")
-print(f"  Encoded soils: {list(encoders['soil_type'].classes_)}")
-print(f"  Encoded irrigation levels: {list(encoders['irrigation_level'].classes_)}")
 print()
 
 print("=" * 60)

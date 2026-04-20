@@ -1,0 +1,1616 @@
+%PDF-1.4
+%‚„œ”
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [6 0 R 8 0 R 10 0 R 12 0 R 14 0 R 16 0 R 18 0 R 20 0 R 22 0 R 24 0 R 26 0 R 28 0 R 30 0 R 32 0 R 34 0 R 36 0 R 38 0 R 40 0 R 42 0 R 44 0 R 46 0 R 48 0 R 50 0 R 52 0 R 54 0 R 56 0 R 58 0 R 60 0 R 62 0 R 64 0 R 66 0 R 68 0 R 70 0 R 72 0 R 74 0 R 76 0 R 78 0 R 80 0 R 82 0 R 84 0 R 86 0 R 88 0 R] /Count 42 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
+endobj
+5 0 obj
+<< /Length 2154 >>
+stream
+BT /F2 18 Tf 54 732 Td (AgriSense Backend Chapter Wise Notes) Tj ET
+BT /F1 11 Tf 54 698 Td (Date: 2026-04-20) Tj ET
+BT /F1 11 Tf 54 683 Td (Scope: `backend/` folder of the AgriSense project) Tj ET
+BT /F1 11 Tf 54 660 Td (This document is written for a computer science beginner who wants to) Tj ET
+BT /F1 11 Tf 54 645 Td (understand:) Tj ET
+BT /F1 11 Tf 54 622 Td (- what this backend does) Tj ET
+BT /F1 11 Tf 54 607 Td (- how every major file works) Tj ET
+BT /F1 11 Tf 54 592 Td (- how the ML pipeline is built) Tj ET
+BT /F1 11 Tf 54 577 Td (- how requests move from the API to the model and back) Tj ET
+BT /F1 11 Tf 54 562 Td (- what each feature means) Tj ET
+BT /F1 11 Tf 54 547 Td (- how to explain this project in an interview) Tj ET
+BT /F2 14 Tf 54 520 Td (Table of Contents) Tj ET
+BT /F1 11 Tf 54 492 Td (1. Project idea) Tj ET
+BT /F1 11 Tf 54 477 Td (2. Backend folder structure) Tj ET
+BT /F1 11 Tf 54 462 Td (3. Tech stack and core concepts) Tj ET
+BT /F1 11 Tf 54 447 Td (4. Application entrypoint: `main.py`) Tj ET
+BT /F1 11 Tf 54 432 Td (5. API routes) Tj ET
+BT /F1 11 Tf 54 417 Td (6. Data layer) Tj ET
+BT /F1 11 Tf 54 402 Td (7. ML feature engineering) Tj ET
+BT /F1 11 Tf 54 387 Td (8. ML training pipeline) Tj ET
+BT /F1 11 Tf 54 372 Td (9. ML prediction pipeline) Tj ET
+BT /F1 11 Tf 54 357 Td (10. Model artifacts) Tj ET
+BT /F1 11 Tf 54 342 Td (11. Support scripts) Tj ET
+BT /F1 11 Tf 54 327 Td (12. Request flow examples) Tj ET
+BT /F1 11 Tf 54 312 Td (13. Interview-ready explanation) Tj ET
+BT /F1 11 Tf 54 297 Td (14. Limitations and improvement ideas) Tj ET
+BT /F1 11 Tf 54 274 Td (---) Tj ET
+BT /F2 14 Tf 54 247 Td (1. Project Idea) Tj ET
+BT /F1 11 Tf 54 219 Td (AgriSense backend is an agriculture recommendation system.) Tj ET
+BT /F1 11 Tf 54 196 Td (Its main job is to help a user answer questions like:) Tj ET
+BT /F1 11 Tf 54 173 Td (- Which crop is suitable for my location?) Tj ET
+BT /F1 11 Tf 54 158 Td (- What crops fit the current weather and soil?) Tj ET
+BT /F1 11 Tf 54 143 Td (- What is the historical weather trend in my area?) Tj ET
+BT /F1 11 Tf 54 128 Td (- What should I know about irrigation, rainfall, and soil?) Tj ET
+endstream
+endobj
+6 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 5 0 R >>
+endobj
+7 0 obj
+<< /Length 2039 >>
+stream
+BT /F1 11 Tf 54 738 Td (The backend uses:) Tj ET
+BT /F1 11 Tf 54 715 Td (- FastAPI for web APIs) Tj ET
+BT /F1 11 Tf 54 700 Td (- weather data from Open-Meteo) Tj ET
+BT /F1 11 Tf 54 685 Td (- soil data from SoilGrids) Tj ET
+BT /F1 11 Tf 54 670 Td (- a crop catalog stored in JSON) Tj ET
+BT /F1 11 Tf 54 655 Td (- an ML model trained on engineered weather and crop features) Tj ET
+BT /F1 11 Tf 54 632 Td (The system is not a generic chatbot only. It is a data-driven crop advisory) Tj ET
+BT /F1 11 Tf 54 617 Td (backend.) Tj ET
+BT /F1 11 Tf 54 594 Td (---) Tj ET
+BT /F2 14 Tf 54 567 Td (2. Backend Folder Structure) Tj ET
+BT /F1 11 Tf 54 539 Td (The important backend files are:) Tj ET
+BT /F1 11 Tf 54 516 Td (- `main.py`) Tj ET
+BT /F1 11 Tf 54 501 Td (- `run_pipeline.py`) Tj ET
+BT /F1 11 Tf 54 486 Td (- `test_request.py`) Tj ET
+BT /F1 11 Tf 54 471 Td (- `requirements.txt`) Tj ET
+BT /F1 11 Tf 54 456 Td (- `data/fetch_weather.py`) Tj ET
+BT /F1 11 Tf 54 441 Td (- `data/fetch_soil.py`) Tj ET
+BT /F1 11 Tf 54 426 Td (- `data/features.csv`) Tj ET
+BT /F1 11 Tf 54 411 Td (- `data/weather_raw.csv`) Tj ET
+BT /F1 11 Tf 54 396 Td (- `data/crop_db.json`) Tj ET
+BT /F1 11 Tf 54 381 Td (- `data/regional_history.json`) Tj ET
+BT /F1 11 Tf 54 366 Td (- `data/india_locations.json`) Tj ET
+BT /F1 11 Tf 54 351 Td (- `ml/features.py`) Tj ET
+BT /F1 11 Tf 54 336 Td (- `ml/train.py`) Tj ET
+BT /F1 11 Tf 54 321 Td (- `ml/predict.py`) Tj ET
+BT /F1 11 Tf 54 306 Td (- `models/crop_model.pkl`) Tj ET
+BT /F1 11 Tf 54 291 Td (- `models/encoders.pkl`) Tj ET
+BT /F1 11 Tf 54 276 Td (- `models/model_metadata.json`) Tj ET
+BT /F1 11 Tf 54 261 Td (- `models/training_report.json`) Tj ET
+BT /F1 11 Tf 54 246 Td (- `routes/recommend.py`) Tj ET
+BT /F1 11 Tf 54 231 Td (- `routes/weather.py`) Tj ET
+BT /F1 11 Tf 54 216 Td (- `routes/regional.py`) Tj ET
+BT /F1 11 Tf 54 201 Td (- `routes/chat.py`) Tj ET
+BT /F1 11 Tf 54 178 Td (There are also cache folders:) Tj ET
+BT /F1 11 Tf 54 155 Td (- `data/weather_cache/`) Tj ET
+BT /F1 11 Tf 54 140 Td (- `data/soil_cache/`) Tj ET
+endstream
+endobj
+8 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 7 0 R >>
+endobj
+9 0 obj
+<< /Length 1815 >>
+stream
+BT /F1 11 Tf 54 738 Td (These are used so the app can reuse previously fetched data when live API calls) Tj ET
+BT /F1 11 Tf 54 723 Td (fail or are slow.) Tj ET
+BT /F1 11 Tf 54 700 Td (---) Tj ET
+BT /F2 14 Tf 54 673 Td (3. Tech Stack and Core Concepts) Tj ET
+BT /F2 12 Tf 54 645 Td (3.1 FastAPI) Tj ET
+BT /F1 11 Tf 54 621 Td (FastAPI is a Python web framework used to build APIs.) Tj ET
+BT /F1 11 Tf 54 598 Td (In this backend:) Tj ET
+BT /F1 11 Tf 54 575 Td (- `FastAPI\(\)` creates the web app) Tj ET
+BT /F1 11 Tf 54 560 Td (- `APIRouter\(\)` is used to split endpoints into separate files) Tj ET
+BT /F1 11 Tf 54 545 Td (- `@router.get\(...\)` and `@router.post\(...\)` define routes) Tj ET
+BT /F1 11 Tf 54 530 Td (- `pydantic.BaseModel` defines request and response schemas) Tj ET
+BT /F2 12 Tf 54 507 Td (3.2 Pandas) Tj ET
+BT /F1 11 Tf 54 483 Td (Pandas is used for table-like data.) Tj ET
+BT /F1 11 Tf 54 460 Td (It handles:) Tj ET
+BT /F1 11 Tf 54 437 Td (- CSV reading) Tj ET
+BT /F1 11 Tf 54 422 Td (- grouping data by month and year) Tj ET
+BT /F1 11 Tf 54 407 Td (- calculating averages and sums) Tj ET
+BT /F1 11 Tf 54 392 Td (- turning daily data into monthly features) Tj ET
+BT /F2 12 Tf 54 369 Td (3.3 Scikit-learn) Tj ET
+BT /F1 11 Tf 54 345 Td (Scikit-learn provides:) Tj ET
+BT /F1 11 Tf 54 322 Td (- `LabelEncoder`) Tj ET
+BT /F1 11 Tf 54 307 Td (- `train_test_split`) Tj ET
+BT /F1 11 Tf 54 292 Td (- `cross_validate`) Tj ET
+BT /F1 11 Tf 54 277 Td (- `StratifiedKFold`) Tj ET
+BT /F1 11 Tf 54 262 Td (- metrics like accuracy, precision, recall, F1, ROC AUC) Tj ET
+BT /F2 12 Tf 54 239 Td (3.4 XGBoost) Tj ET
+BT /F1 11 Tf 54 215 Td (XGBoost is a machine learning model that is good at tabular data.) Tj ET
+BT /F1 11 Tf 54 192 Td (In this project, it is used to predict whether a crop is suitable or not.) Tj ET
+endstream
+endobj
+10 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 9 0 R >>
+endobj
+11 0 obj
+<< /Length 1695 >>
+stream
+BT /F2 12 Tf 54 738 Td (3.5 Joblib) Tj ET
+BT /F1 11 Tf 54 714 Td (Joblib saves and loads trained ML models from disk.) Tj ET
+BT /F1 11 Tf 54 691 Td (That is why `crop_model.pkl` and `encoders.pkl` can be reused without) Tj ET
+BT /F1 11 Tf 54 676 Td (retraining.) Tj ET
+BT /F2 12 Tf 54 653 Td (3.6 External APIs) Tj ET
+BT /F1 11 Tf 54 629 Td (The project talks to two external services:) Tj ET
+BT /F1 11 Tf 54 606 Td (- Open-Meteo for weather) Tj ET
+BT /F1 11 Tf 54 591 Td (- SoilGrids for soil properties) Tj ET
+BT /F1 11 Tf 54 568 Td (If they fail, the backend tries local cache or fallback values.) Tj ET
+BT /F1 11 Tf 54 545 Td (---) Tj ET
+BT /F2 14 Tf 54 518 Td (4. Application Entrypoint: `main.py`) Tj ET
+BT /F1 11 Tf 54 490 Td (File: [`backend/main.py`]\(./main.py\)) Tj ET
+BT /F1 11 Tf 54 467 Td (This is the file that starts the FastAPI application.) Tj ET
+BT /F2 12 Tf 54 444 Td (What it imports) Tj ET
+BT /F1 11 Tf 54 420 Td (- `os` for environment variables) Tj ET
+BT /F1 11 Tf 54 405 Td (- `FastAPI` to create the app) Tj ET
+BT /F1 11 Tf 54 390 Td (- `CORSMiddleware` to allow frontend requests) Tj ET
+BT /F1 11 Tf 54 375 Td (- route modules: `chat`, `recommend`, `weather`, `regional`) Tj ET
+BT /F1 11 Tf 54 360 Td (- `load_dotenv\(\)` to read variables from `.env`) Tj ET
+BT /F2 12 Tf 54 337 Td (What the code does) Tj ET
+BT /F1 11 Tf 54 313 Td (#### `load_dotenv\(\)`) Tj ET
+BT /F1 11 Tf 54 290 Td (This loads environment variables from `.env`.) Tj ET
+BT /F1 11 Tf 54 267 Td (That allows configuration like:) Tj ET
+BT /F1 11 Tf 54 244 Td (- allowed origins) Tj ET
+BT /F1 11 Tf 54 229 Td (- API base settings) Tj ET
+BT /F1 11 Tf 54 206 Td (#### `_parse_origins\(raw_value\)`) Tj ET
+endstream
+endobj
+12 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 11 0 R >>
+endobj
+13 0 obj
+<< /Length 1839 >>
+stream
+BT /F1 11 Tf 54 738 Td (This helper function converts a comma-separated string into a Python list.) Tj ET
+BT /F1 11 Tf 54 715 Td (Example:) Tj ET
+BT /F1 11 Tf 54 692 Td (- input: `"http://localhost:5173,http://127.0.0.1:5173"`) Tj ET
+BT /F1 11 Tf 54 677 Td (- output: `["http://localhost:5173", "http://127.0.0.1:5173"]`) Tj ET
+BT /F1 11 Tf 54 654 Td (If no custom value is provided, it uses default local frontend origins.) Tj ET
+BT /F1 11 Tf 54 631 Td (#### `app = FastAPI\(...\)`) Tj ET
+BT /F1 11 Tf 54 608 Td (This creates the main backend app.) Tj ET
+BT /F1 11 Tf 54 585 Td (The app has:) Tj ET
+BT /F1 11 Tf 54 562 Td (- title: `AgriSense API`) Tj ET
+BT /F1 11 Tf 54 547 Td (- description: `India-wide AI crop recommendation and farmer assistant API`) Tj ET
+BT /F1 11 Tf 54 532 Td (- version: `1.0.0`) Tj ET
+BT /F1 11 Tf 54 509 Td (#### `app.add_middleware\(CORSMiddleware, ...\)`) Tj ET
+BT /F1 11 Tf 54 486 Td (CORS means Cross-Origin Resource Sharing.) Tj ET
+BT /F1 11 Tf 54 463 Td (It allows the frontend running on another port, such as `5173`, to call the) Tj ET
+BT /F1 11 Tf 54 448 Td (backend safely.) Tj ET
+BT /F1 11 Tf 54 425 Td (#### `app.include_router\(...\)`) Tj ET
+BT /F1 11 Tf 54 402 Td (Each router is attached under `/api`.) Tj ET
+BT /F1 11 Tf 54 379 Td (So the actual routes become:) Tj ET
+BT /F1 11 Tf 54 356 Td (- `/api/recommend`) Tj ET
+BT /F1 11 Tf 54 341 Td (- `/api/weather`) Tj ET
+BT /F1 11 Tf 54 326 Td (- `/api/regional/{region_name}`) Tj ET
+BT /F1 11 Tf 54 311 Td (- `/api/regions`) Tj ET
+BT /F1 11 Tf 54 296 Td (- `/api/chat`) Tj ET
+BT /F1 11 Tf 54 273 Td (#### `@app.get\("/"\)`) Tj ET
+BT /F1 11 Tf 54 250 Td (The root endpoint returns a small status message.) Tj ET
+BT /F1 11 Tf 54 227 Td (It is a quick check that the backend is alive.) Tj ET
+BT /F1 11 Tf 54 204 Td (#### `@app.get\("/health"\)`) Tj ET
+endstream
+endobj
+14 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 13 0 R >>
+endobj
+15 0 obj
+<< /Length 1697 >>
+stream
+BT /F1 11 Tf 54 730 Td (This is a health check endpoint.) Tj ET
+BT /F1 11 Tf 54 707 Td (It returns `{"status": "ok"}`.) Tj ET
+BT /F2 12 Tf 54 684 Td (Interview explanation) Tj ET
+BT /F1 11 Tf 54 660 Td (You can say:) Tj ET
+BT /F1 11 Tf 54 637 Td (> `main.py` is the startup file. It creates the FastAPI app, adds CORS support,) Tj ET
+BT /F1 11 Tf 54 622 Td (registers all route modules, and exposes basic health endpoints.) Tj ET
+BT /F1 11 Tf 54 599 Td (---) Tj ET
+BT /F2 14 Tf 54 572 Td (5. API Routes) Tj ET
+BT /F1 11 Tf 54 544 Td (The backend has four major route files.) Tj ET
+BT /F1 11 Tf 54 521 Td (1. `routes/recommend.py`) Tj ET
+BT /F1 11 Tf 54 506 Td (2. `routes/weather.py`) Tj ET
+BT /F1 11 Tf 54 491 Td (3. `routes/regional.py`) Tj ET
+BT /F1 11 Tf 54 476 Td (4. `routes/chat.py`) Tj ET
+BT /F1 11 Tf 54 453 Td (Each file has one responsibility.) Tj ET
+BT /F1 11 Tf 54 430 Td (---) Tj ET
+BT /F2 14 Tf 54 403 Td (5.1 Recommendation Route: `routes/recommend.py`) Tj ET
+BT /F1 11 Tf 54 375 Td (File: [`backend/routes/recommend.py`]\(./routes/recommend.py\)) Tj ET
+BT /F1 11 Tf 54 352 Td (This is the main crop recommendation endpoint.) Tj ET
+BT /F2 12 Tf 54 329 Td (Request model: `RecommendRequest`) Tj ET
+BT /F1 11 Tf 54 305 Td (This Pydantic model defines the input the API expects.) Tj ET
+BT /F1 11 Tf 54 282 Td (Fields:) Tj ET
+BT /F1 11 Tf 54 259 Td (- `district`: location name) Tj ET
+BT /F1 11 Tf 54 244 Td (- `lat`: latitude) Tj ET
+BT /F1 11 Tf 54 229 Td (- `lon`: longitude) Tj ET
+BT /F1 11 Tf 54 214 Td (- `month`: month number from 1 to 12) Tj ET
+BT /F1 11 Tf 54 199 Td (- `year`: calendar year) Tj ET
+BT /F1 11 Tf 54 184 Td (- `soil_type`: optional user-provided soil type) Tj ET
+endstream
+endobj
+16 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 15 0 R >>
+endobj
+17 0 obj
+<< /Length 1971 >>
+stream
+BT /F1 11 Tf 54 738 Td (- `soil_ph`: optional pH value) Tj ET
+BT /F1 11 Tf 54 723 Td (- `organic_matter_pct`: optional organic matter percentage) Tj ET
+BT /F1 11 Tf 54 708 Td (- `irrigation_level`: optional irrigation preference) Tj ET
+BT /F1 11 Tf 54 685 Td (Important details:) Tj ET
+BT /F1 11 Tf 54 662 Td (- `month` is validated to stay between 1 and 12) Tj ET
+BT /F1 11 Tf 54 647 Td (- optional fields allow the user to override soil data if they know it) Tj ET
+BT /F2 12 Tf 54 624 Td (Response model: `CropResult`) Tj ET
+BT /F1 11 Tf 54 600 Td (This defines the output structure for each recommended crop.) Tj ET
+BT /F1 11 Tf 54 577 Td (Fields:) Tj ET
+BT /F1 11 Tf 54 554 Td (- `crop`) Tj ET
+BT /F1 11 Tf 54 539 Td (- `confidence`) Tj ET
+BT /F1 11 Tf 54 524 Td (- `water_req`) Tj ET
+BT /F1 11 Tf 54 509 Td (- `avg_yield_qtl_acre`) Tj ET
+BT /F1 11 Tf 54 494 Td (- `price`) Tj ET
+BT /F1 11 Tf 54 479 Td (- `avg_cost_inr_acre`) Tj ET
+BT /F1 11 Tf 54 464 Td (- `expected_profit_inr_acre`) Tj ET
+BT /F1 11 Tf 54 449 Td (- `season`) Tj ET
+BT /F1 11 Tf 54 434 Td (- `reason`) Tj ET
+BT /F1 11 Tf 54 419 Td (- `emoji`) Tj ET
+BT /F1 11 Tf 54 404 Td (- `growth_instructions`) Tj ET
+BT /F1 11 Tf 54 389 Td (- `regional_success_rate`) Tj ET
+BT /F1 11 Tf 54 374 Td (- `regional_avg_profit`) Tj ET
+BT /F1 11 Tf 54 359 Td (- `ai_analysis`) Tj ET
+BT /F2 12 Tf 54 336 Td (Main endpoint: `@router.post\("/recommend"\)`) Tj ET
+BT /F1 11 Tf 54 312 Td (This endpoint generates crop recommendations.) Tj ET
+BT /F1 11 Tf 54 289 Td (#### Step 1: Import helpers) Tj ET
+BT /F1 11 Tf 54 266 Td (Inside the function, it imports:) Tj ET
+BT /F1 11 Tf 54 243 Td (- `get_soil_context`) Tj ET
+BT /F1 11 Tf 54 228 Td (- `get_weather_data`) Tj ET
+BT /F1 11 Tf 54 213 Td (- `engineer_features`) Tj ET
+BT /F1 11 Tf 54 198 Td (- `predict_crops`) Tj ET
+BT /F1 11 Tf 54 175 Td (They are imported inside the route so the app does not load them unnecessarily) Tj ET
+BT /F1 11 Tf 54 160 Td (on startup.) Tj ET
+endstream
+endobj
+18 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 17 0 R >>
+endobj
+19 0 obj
+<< /Length 1834 >>
+stream
+BT /F1 11 Tf 54 730 Td (#### Step 2: Fetch historical weather) Tj ET
+BT /F1 11 Tf 54 707 Td (`get_weather_data\(req.lat, req.lon, location_name=req.district\)` fetches daily) Tj ET
+BT /F1 11 Tf 54 692 Td (weather history.) Tj ET
+BT /F1 11 Tf 54 669 Td (If no weather data is returned, the function raises `404`.) Tj ET
+BT /F1 11 Tf 54 646 Td (#### Step 3: Convert daily weather into monthly features) Tj ET
+BT /F1 11 Tf 54 623 Td (`engineer_features\(weather_df\)` groups daily weather into month-level rows.) Tj ET
+BT /F1 11 Tf 54 600 Td (This is needed because crop recommendation is done on monthly climate patterns,) Tj ET
+BT /F1 11 Tf 54 585 Td (not raw daily rows.) Tj ET
+BT /F1 11 Tf 54 562 Td (#### Step 4: Find the requested month and year) Tj ET
+BT /F1 11 Tf 54 539 Td (The code first tries:) Tj ET
+BT /F1 11 Tf 54 516 Td (- exact `year` and `month`) Tj ET
+BT /F1 11 Tf 54 493 Td (If that is not found, it falls back to:) Tj ET
+BT /F1 11 Tf 54 470 Td (- matching only `month`) Tj ET
+BT /F1 11 Tf 54 447 Td (This makes the route more flexible when exact year data is missing.) Tj ET
+BT /F1 11 Tf 54 424 Td (#### Step 5: Get soil context) Tj ET
+BT /F1 11 Tf 54 401 Td (`get_soil_context\(req.lat, req.lon\)` returns soil properties for the location.) Tj ET
+BT /F1 11 Tf 54 378 Td (Then user-provided values can override the fetched soil values:) Tj ET
+BT /F1 11 Tf 54 355 Td (- `soil_type`) Tj ET
+BT /F1 11 Tf 54 340 Td (- `soil_ph`) Tj ET
+BT /F1 11 Tf 54 325 Td (- `organic_matter_pct`) Tj ET
+BT /F1 11 Tf 54 310 Td (- `irrigation_level`) Tj ET
+BT /F1 11 Tf 54 287 Td (#### Step 6: Predict crops) Tj ET
+BT /F1 11 Tf 54 264 Td (`predict_crops\(weather_dict, soil_context=soil_context, state=state\)` returns) Tj ET
+BT /F1 11 Tf 54 249 Td (ranked crops.) Tj ET
+BT /F1 11 Tf 54 226 Td (The result is sorted by confidence.) Tj ET
+endstream
+endobj
+20 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 19 0 R >>
+endobj
+21 0 obj
+<< /Length 1656 >>
+stream
+BT /F1 11 Tf 54 738 Td (#### Step 7: Return recommendations) Tj ET
+BT /F1 11 Tf 54 715 Td (If no recommendations are found, it raises `404`.) Tj ET
+BT /F1 11 Tf 54 692 Td (Otherwise it returns the list of `CropResult`.) Tj ET
+BT /F2 12 Tf 54 669 Td (Error handling) Tj ET
+BT /F1 11 Tf 54 645 Td (The route catches:) Tj ET
+BT /F1 11 Tf 54 622 Td (- `HTTPException` and re-raises it) Tj ET
+BT /F1 11 Tf 54 607 Td (- all other exceptions as `500`) Tj ET
+BT /F2 12 Tf 54 584 Td (Interview explanation) Tj ET
+BT /F1 11 Tf 54 560 Td (You can say:) Tj ET
+BT /F1 11 Tf 54 537 Td (> The recommendation route collects weather and soil inputs, converts weather) Tj ET
+BT /F1 11 Tf 54 522 Td (into monthly features, then uses the ML prediction module to rank the most) Tj ET
+BT /F1 11 Tf 54 507 Td (suitable crops for that month and location.) Tj ET
+BT /F1 11 Tf 54 484 Td (---) Tj ET
+BT /F2 14 Tf 54 457 Td (5.2 Weather Route: `routes/weather.py`) Tj ET
+BT /F1 11 Tf 54 429 Td (File: [`backend/routes/weather.py`]\(./routes/weather.py\)) Tj ET
+BT /F1 11 Tf 54 406 Td (This route is used to inspect weather history, current weather, and soil for a) Tj ET
+BT /F1 11 Tf 54 391 Td (location.) Tj ET
+BT /F2 12 Tf 54 368 Td (Endpoint) Tj ET
+BT /F1 11 Tf 54 344 Td (`@router.get\("/weather"\)`) Tj ET
+BT /F2 12 Tf 54 321 Td (Query parameters) Tj ET
+BT /F1 11 Tf 54 297 Td (- `lat`) Tj ET
+BT /F1 11 Tf 54 282 Td (- `lon`) Tj ET
+BT /F1 11 Tf 54 267 Td (- `location_name`) Tj ET
+BT /F2 12 Tf 54 244 Td (What it does) Tj ET
+BT /F1 11 Tf 54 220 Td (#### Step 1: Get ten years of history) Tj ET
+BT /F1 11 Tf 54 197 Td (The route calculates a start date about ten years ago.) Tj ET
+endstream
+endobj
+22 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 21 0 R >>
+endobj
+23 0 obj
+<< /Length 1738 >>
+stream
+BT /F1 11 Tf 54 730 Td (This is used to load long-term weather history.) Tj ET
+BT /F1 11 Tf 54 707 Td (#### Step 2: Fetch data from three sources) Tj ET
+BT /F1 11 Tf 54 684 Td (It calls:) Tj ET
+BT /F1 11 Tf 54 661 Td (- `get_weather_data\(...\)` for historical weather) Tj ET
+BT /F1 11 Tf 54 646 Td (- `get_current_weather\(...\)` for live weather and forecast) Tj ET
+BT /F1 11 Tf 54 631 Td (- `get_soil_context\(...\)` for soil profile) Tj ET
+BT /F1 11 Tf 54 608 Td (#### Step 3: Handle missing history) Tj ET
+BT /F1 11 Tf 54 585 Td (If no historical data exists, it still returns:) Tj ET
+BT /F1 11 Tf 54 562 Td (- current weather) Tj ET
+BT /F1 11 Tf 54 547 Td (- forecast) Tj ET
+BT /F1 11 Tf 54 532 Td (- soil) Tj ET
+BT /F1 11 Tf 54 517 Td (- metadata about the source) Tj ET
+BT /F1 11 Tf 54 494 Td (This is a graceful fallback.) Tj ET
+BT /F1 11 Tf 54 471 Td (#### Step 4: Engineer monthly trends) Tj ET
+BT /F1 11 Tf 54 448 Td (If history exists, `engineer_features\(history_df\)` creates monthly rows.) Tj ET
+BT /F1 11 Tf 54 425 Td (Then the latest 120 months are used to create a chart-friendly list called) Tj ET
+BT /F1 11 Tf 54 410 Td (`historical_trend`.) Tj ET
+BT /F1 11 Tf 54 387 Td (Each trend row includes:) Tj ET
+BT /F1 11 Tf 54 364 Td (- label like `Jul 24`) Tj ET
+BT /F1 11 Tf 54 349 Td (- rainfall) Tj ET
+BT /F1 11 Tf 54 334 Td (- temp_max) Tj ET
+BT /F1 11 Tf 54 319 Td (- temp_min) Tj ET
+BT /F1 11 Tf 54 304 Td (- water_balance) Tj ET
+BT /F1 11 Tf 54 289 Td (- humidity) Tj ET
+BT /F2 12 Tf 54 266 Td (Why this route matters) Tj ET
+BT /F1 11 Tf 54 242 Td (It powers weather graphs and climate summaries in the frontend.) Tj ET
+BT /F2 12 Tf 54 219 Td (Interview explanation) Tj ET
+BT /F1 11 Tf 54 195 Td (You can say:) Tj ET
+endstream
+endobj
+24 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 23 0 R >>
+endobj
+25 0 obj
+<< /Length 1621 >>
+stream
+BT /F1 11 Tf 54 730 Td (> The weather route combines live weather, forecast, soil, and historical trend) Tj ET
+BT /F1 11 Tf 54 715 Td (data so the user can understand the agricultural conditions of the selected) Tj ET
+BT /F1 11 Tf 54 700 Td (location.) Tj ET
+BT /F1 11 Tf 54 677 Td (---) Tj ET
+BT /F2 14 Tf 54 650 Td (5.3 Regional Route: `routes/regional.py`) Tj ET
+BT /F1 11 Tf 54 622 Td (File: [`backend/routes/regional.py`]\(./routes/regional.py\)) Tj ET
+BT /F1 11 Tf 54 599 Td (This route gives region-level agricultural information.) Tj ET
+BT /F2 12 Tf 54 576 Td (Data loaded at module level) Tj ET
+BT /F1 11 Tf 54 552 Td (- `regional_history.json`) Tj ET
+BT /F1 11 Tf 54 537 Td (- `india_locations.json`) Tj ET
+BT /F2 12 Tf 54 514 Td (Response model) Tj ET
+BT /F1 11 Tf 54 490 Td (#### `HistSuccess`) Tj ET
+BT /F1 11 Tf 54 467 Td (Represents historical crop success for one crop in a region.) Tj ET
+BT /F1 11 Tf 54 444 Td (Fields:) Tj ET
+BT /F1 11 Tf 54 421 Td (- `crop`) Tj ET
+BT /F1 11 Tf 54 406 Td (- `avg_profit`) Tj ET
+BT /F1 11 Tf 54 391 Td (- `success_rate`) Tj ET
+BT /F1 11 Tf 54 376 Td (- `notable_year`) Tj ET
+BT /F1 11 Tf 54 353 Td (#### `RegionalReport`) Tj ET
+BT /F1 11 Tf 54 330 Td (Represents the complete regional response.) Tj ET
+BT /F1 11 Tf 54 307 Td (Fields:) Tj ET
+BT /F1 11 Tf 54 284 Td (- `region`) Tj ET
+BT /F1 11 Tf 54 269 Td (- `states`) Tj ET
+BT /F1 11 Tf 54 254 Td (- `historical_success`) Tj ET
+BT /F1 11 Tf 54 239 Td (- `weather_summary`) Tj ET
+BT /F1 11 Tf 54 224 Td (- `top_recommended_crops`) Tj ET
+BT /F2 12 Tf 54 201 Td (Endpoint: `@router.get\("/regional/{region_name}"\)`) Tj ET
+endstream
+endobj
+26 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 25 0 R >>
+endobj
+27 0 obj
+<< /Length 1916 >>
+stream
+BT /F1 11 Tf 54 738 Td (This route:) Tj ET
+BT /F1 11 Tf 54 715 Td (1. checks whether the region exists) Tj ET
+BT /F1 11 Tf 54 700 Td (2. finds a representative location in that region) Tj ET
+BT /F1 11 Tf 54 685 Td (3. fetches weather for that location) Tj ET
+BT /F1 11 Tf 54 670 Td (4. engineers features) Tj ET
+BT /F1 11 Tf 54 655 Td (5. filters rows for the requested month) Tj ET
+BT /F1 11 Tf 54 640 Td (6. computes average weather conditions) Tj ET
+BT /F1 11 Tf 54 625 Td (7. calls `predict_crops\(...\)`) Tj ET
+BT /F1 11 Tf 54 610 Td (8. returns region history plus crop suggestions) Tj ET
+BT /F2 12 Tf 54 587 Td (Why a representative location is used) Tj ET
+BT /F1 11 Tf 54 563 Td (Some regions contain many states.) Tj ET
+BT /F1 11 Tf 54 540 Td (Instead of fetching all locations, the code picks one city or district as a) Tj ET
+BT /F1 11 Tf 54 525 Td (sample weather anchor.) Tj ET
+BT /F2 12 Tf 54 502 Td (Endpoint: `@router.get\("/regions"\)`) Tj ET
+BT /F1 11 Tf 54 478 Td (Returns the list of available region names.) Tj ET
+BT /F2 12 Tf 54 455 Td (Interview explanation) Tj ET
+BT /F1 11 Tf 54 431 Td (You can say:) Tj ET
+BT /F1 11 Tf 54 408 Td (> The regional route summarizes crop success by Indian region and combines that) Tj ET
+BT /F1 11 Tf 54 393 Td (with weather-based recommendations for a representative location in that region.) Tj ET
+BT /F1 11 Tf 54 370 Td (---) Tj ET
+BT /F2 14 Tf 54 343 Td (5.4 Chat Route: `routes/chat.py`) Tj ET
+BT /F1 11 Tf 54 315 Td (File: [`backend/routes/chat.py`]\(./routes/chat.py\)) Tj ET
+BT /F1 11 Tf 54 292 Td (This route acts like a rule-based agricultural assistant.) Tj ET
+BT /F1 11 Tf 54 269 Td (It is not a real large language model. It is a structured response generator.) Tj ET
+BT /F2 12 Tf 54 246 Td (Request model: `ChatRequest`) Tj ET
+BT /F1 11 Tf 54 222 Td (Fields:) Tj ET
+BT /F1 11 Tf 54 199 Td (- `district`) Tj ET
+BT /F1 11 Tf 54 184 Td (- `lat`) Tj ET
+endstream
+endobj
+28 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 27 0 R >>
+endobj
+29 0 obj
+<< /Length 1929 >>
+stream
+BT /F1 11 Tf 54 738 Td (- `lon`) Tj ET
+BT /F1 11 Tf 54 723 Td (- `question`) Tj ET
+BT /F1 11 Tf 54 708 Td (- `month`) Tj ET
+BT /F1 11 Tf 54 693 Td (- `year`) Tj ET
+BT /F1 11 Tf 54 670 Td (The `question` field must be at least 2 characters.) Tj ET
+BT /F2 12 Tf 54 647 Td (Helper: `_is_hindi\(text\)`) Tj ET
+BT /F1 11 Tf 54 623 Td (Checks whether the input contains Hindi script characters.) Tj ET
+BT /F1 11 Tf 54 600 Td (This is done with a regex that matches Devanagari Unicode range.) Tj ET
+BT /F2 12 Tf 54 577 Td (Helper: `_format_crop_list\(recommendations\)`) Tj ET
+BT /F1 11 Tf 54 553 Td (Turns the top crops into a readable string like:) Tj ET
+BT /F1 11 Tf 54 530 Td (- `Wheat \(95.0%\), Rice \(90.0%\), Mustard \(88.5%\)`) Tj ET
+BT /F1 11 Tf 54 507 Td (If no recommendations exist, it returns a fallback message.) Tj ET
+BT /F2 12 Tf 54 484 Td (Helper: `_english_answer\(...\)`) Tj ET
+BT /F1 11 Tf 54 460 Td (This function looks at the question text and tries to classify intent.) Tj ET
+BT /F1 11 Tf 54 437 Td (It answers differently for:) Tj ET
+BT /F1 11 Tf 54 414 Td (- crop recommendation) Tj ET
+BT /F1 11 Tf 54 399 Td (- weather questions) Tj ET
+BT /F1 11 Tf 54 384 Td (- soil questions) Tj ET
+BT /F1 11 Tf 54 369 Td (- fertilizer questions) Tj ET
+BT /F1 11 Tf 54 354 Td (- water or irrigation questions) Tj ET
+BT /F1 11 Tf 54 339 Td (- generic questions) Tj ET
+BT /F1 11 Tf 54 316 Td (This is simple intent matching using keywords.) Tj ET
+BT /F2 12 Tf 54 293 Td (Helper: `_hindi_answer\(...\)`) Tj ET
+BT /F1 11 Tf 54 269 Td (This does the same thing as `_english_answer`, but returns Hindi responses.) Tj ET
+BT /F1 11 Tf 54 246 Td (The Hindi answers appear partially encoded in the source file, but the intention) Tj ET
+BT /F1 11 Tf 54 231 Td (is clear:) Tj ET
+BT /F1 11 Tf 54 208 Td (- answer in Hindi when the user writes in Hindi) Tj ET
+BT /F1 11 Tf 54 193 Td (- give crop, weather, soil, and irrigation help) Tj ET
+endstream
+endobj
+30 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 29 0 R >>
+endobj
+31 0 obj
+<< /Length 1874 >>
+stream
+BT /F2 12 Tf 54 730 Td (Main endpoint: `@router.post\("/chat"\)`) Tj ET
+BT /F1 11 Tf 54 706 Td (This route:) Tj ET
+BT /F1 11 Tf 54 683 Td (1. fetches historical weather) Tj ET
+BT /F1 11 Tf 54 668 Td (2. fetches soil) Tj ET
+BT /F1 11 Tf 54 653 Td (3. fetches current weather) Tj ET
+BT /F1 11 Tf 54 638 Td (4. engineers monthly weather features) Tj ET
+BT /F1 11 Tf 54 623 Td (5. extracts a matching row for the requested month and year) Tj ET
+BT /F1 11 Tf 54 608 Td (6. generates crop recommendations) Tj ET
+BT /F1 11 Tf 54 593 Td (7. builds a weather context object) Tj ET
+BT /F1 11 Tf 54 578 Td (8. chooses English or Hindi response based on the input) Tj ET
+BT /F1 11 Tf 54 563 Td (9. returns:) Tj ET
+BT /F1 11 Tf 54 548 Td (- `answer`) Tj ET
+BT /F1 11 Tf 54 533 Td (- `soil`) Tj ET
+BT /F1 11 Tf 54 518 Td (- `weather`) Tj ET
+BT /F1 11 Tf 54 503 Td (- `recommendations`) Tj ET
+BT /F2 12 Tf 54 480 Td (Important idea) Tj ET
+BT /F1 11 Tf 54 456 Td (This chat endpoint is rule-driven, not generative AI.) Tj ET
+BT /F1 11 Tf 54 433 Td (It simulates helpful answers using data and keyword detection.) Tj ET
+BT /F2 12 Tf 54 410 Td (Interview explanation) Tj ET
+BT /F1 11 Tf 54 386 Td (You can say:) Tj ET
+BT /F1 11 Tf 54 363 Td (> The chat route is a lightweight agricultural assistant that answers in English) Tj ET
+BT /F1 11 Tf 54 348 Td (or Hindi by combining weather, soil, and crop recommendation data with) Tj ET
+BT /F1 11 Tf 54 333 Td (keyword-based intent handling.) Tj ET
+BT /F1 11 Tf 54 310 Td (---) Tj ET
+BT /F2 14 Tf 54 283 Td (6. Data Layer) Tj ET
+BT /F1 11 Tf 54 255 Td (The data layer handles weather, soil, and agricultural reference information.) Tj ET
+BT /F1 11 Tf 54 232 Td (---) Tj ET
+BT /F2 14 Tf 54 205 Td (6.1 Weather Fetching: `data/fetch_weather.py`) Tj ET
+BT /F1 11 Tf 54 177 Td (File: [`backend/data/fetch_weather.py`]\(./data/fetch_weather.py\)) Tj ET
+endstream
+endobj
+32 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 31 0 R >>
+endobj
+33 0 obj
+<< /Length 2088 >>
+stream
+BT /F1 11 Tf 54 738 Td (This is one of the most important backend files.) Tj ET
+BT /F1 11 Tf 54 715 Td (It is responsible for:) Tj ET
+BT /F1 11 Tf 54 692 Td (- fetching weather history) Tj ET
+BT /F1 11 Tf 54 677 Td (- fetching current weather) Tj ET
+BT /F1 11 Tf 54 662 Td (- caching responses) Tj ET
+BT /F1 11 Tf 54 647 Td (- loading cached weather if live data fails) Tj ET
+BT /F1 11 Tf 54 632 Td (- building a multi-location India weather dataset) Tj ET
+BT /F2 12 Tf 54 609 Td (Important constants) Tj ET
+BT /F1 11 Tf 54 585 Td (- `DATA_DIR`: folder containing data files) Tj ET
+BT /F1 11 Tf 54 570 Td (- `WEATHER_CACHE_DIR`: folder for cached weather JSON) Tj ET
+BT /F1 11 Tf 54 555 Td (- `DEFAULT_END_DATE`: current date minus 5 days) Tj ET
+BT /F1 11 Tf 54 540 Td (- `DEFAULT_CACHE_LAT`, `DEFAULT_CACHE_LON`: default sample coordinates) Tj ET
+BT /F1 11 Tf 54 525 Td (- `DEFAULT_CURRENT_WEATHER`: empty fallback structure) Tj ET
+BT /F2 12 Tf 54 502 Td (Helper: `_cache_path\(lat, lon, suffix\)`) Tj ET
+BT /F1 11 Tf 54 478 Td (Creates a deterministic cache file name for a location.) Tj ET
+BT /F1 11 Tf 54 455 Td (It uses an MD5 hash of:) Tj ET
+BT /F1 11 Tf 54 432 Td (- latitude) Tj ET
+BT /F1 11 Tf 54 417 Td (- longitude) Tj ET
+BT /F1 11 Tf 54 402 Td (- suffix) Tj ET
+BT /F1 11 Tf 54 379 Td (This avoids problems with long or invalid file names.) Tj ET
+BT /F2 12 Tf 54 356 Td (Helper: `_normalize_weather_frame\(...\)`) Tj ET
+BT /F1 11 Tf 54 332 Td (This function standardizes weather data returned from different sources.) Tj ET
+BT /F1 11 Tf 54 309 Td (It:) Tj ET
+BT /F1 11 Tf 54 286 Td (- copies the dataframe) Tj ET
+BT /F1 11 Tf 54 271 Td (- ensures `date` exists) Tj ET
+BT /F1 11 Tf 54 256 Td (- drops duplicate `time`) Tj ET
+BT /F1 11 Tf 54 241 Td (- converts `date` to datetime) Tj ET
+BT /F1 11 Tf 54 226 Td (- creates `year` and `month`) Tj ET
+BT /F1 11 Tf 54 211 Td (- stores `lat` and `lon`) Tj ET
+BT /F1 11 Tf 54 196 Td (- stores `location_name`) Tj ET
+BT /F1 11 Tf 54 181 Td (- creates a unique `location_id`) Tj ET
+BT /F1 11 Tf 54 166 Td (- stores `state` if given) Tj ET
+endstream
+endobj
+34 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 33 0 R >>
+endobj
+35 0 obj
+<< /Length 1817 >>
+stream
+BT /F1 11 Tf 54 738 Td (- renames columns to a consistent naming scheme) Tj ET
+BT /F1 11 Tf 54 723 Td (- removes duplicated columns) Tj ET
+BT /F1 11 Tf 54 700 Td (This is important because API data and CSV data can use different column names.) Tj ET
+BT /F2 12 Tf 54 677 Td (Function: `load_cached_weather\(...\)`) Tj ET
+BT /F1 11 Tf 54 653 Td (This tries to read weather from local cache first.) Tj ET
+BT /F1 11 Tf 54 630 Td (If cache is missing, it falls back to `weather_raw.csv`.) Tj ET
+BT /F1 11 Tf 54 607 Td (If the CSV is used:) Tj ET
+BT /F1 11 Tf 54 584 Td (- it computes distance between requested coordinates and saved locations) Tj ET
+BT /F1 11 Tf 54 569 Td (- it picks the closest location if the distance is small enough) Tj ET
+BT /F1 11 Tf 54 546 Td (That means the project can still work even when the exact location has no cached) Tj ET
+BT /F1 11 Tf 54 531 Td (data.) Tj ET
+BT /F2 12 Tf 54 508 Td (Function: `fetch_weather\(...\)`) Tj ET
+BT /F1 11 Tf 54 484 Td (This calls the Open-Meteo archive API.) Tj ET
+BT /F1 11 Tf 54 461 Td (It requests:) Tj ET
+BT /F1 11 Tf 54 438 Td (- max temperature) Tj ET
+BT /F1 11 Tf 54 423 Td (- min temperature) Tj ET
+BT /F1 11 Tf 54 408 Td (- precipitation) Tj ET
+BT /F1 11 Tf 54 393 Td (- relative humidity) Tj ET
+BT /F1 11 Tf 54 378 Td (- wind speed) Tj ET
+BT /F1 11 Tf 54 363 Td (- evapotranspiration) Tj ET
+BT /F1 11 Tf 54 340 Td (After fetching:) Tj ET
+BT /F1 11 Tf 54 317 Td (- the response is turned into a dataframe) Tj ET
+BT /F1 11 Tf 54 302 Td (- normalized) Tj ET
+BT /F1 11 Tf 54 287 Td (- optionally saved to cache) Tj ET
+BT /F2 12 Tf 54 264 Td (Function: `fetch_current_weather\(...\)`) Tj ET
+BT /F1 11 Tf 54 240 Td (This calls the Open-Meteo forecast API.) Tj ET
+BT /F1 11 Tf 54 217 Td (It gets:) Tj ET
+BT /F1 11 Tf 54 194 Td (- current temperature) Tj ET
+endstream
+endobj
+36 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 35 0 R >>
+endobj
+37 0 obj
+<< /Length 1770 >>
+stream
+BT /F1 11 Tf 54 738 Td (- humidity) Tj ET
+BT /F1 11 Tf 54 723 Td (- apparent temperature) Tj ET
+BT /F1 11 Tf 54 708 Td (- precipitation) Tj ET
+BT /F1 11 Tf 54 693 Td (- weather code) Tj ET
+BT /F1 11 Tf 54 678 Td (- cloud cover) Tj ET
+BT /F1 11 Tf 54 663 Td (- wind speed) Tj ET
+BT /F1 11 Tf 54 648 Td (- wind direction) Tj ET
+BT /F1 11 Tf 54 625 Td (It also creates a short 3-day forecast list.) Tj ET
+BT /F2 12 Tf 54 602 Td (Function: `load_cached_current_weather\(...\)`) Tj ET
+BT /F1 11 Tf 54 578 Td (Loads previously saved current weather from cache.) Tj ET
+BT /F2 12 Tf 54 555 Td (Function: `get_weather_data\(...\)`) Tj ET
+BT /F1 11 Tf 54 531 Td (This is the safe public function used by routes and ML code.) Tj ET
+BT /F1 11 Tf 54 508 Td (Behavior:) Tj ET
+BT /F1 11 Tf 54 485 Td (1. try live fetch) Tj ET
+BT /F1 11 Tf 54 470 Td (2. if live fails, load cache) Tj ET
+BT /F1 11 Tf 54 455 Td (3. return data plus metadata telling where it came from) Tj ET
+BT /F1 11 Tf 54 432 Td (This is a good example of a live-data-with-fallback pattern.) Tj ET
+BT /F2 12 Tf 54 409 Td (Function: `get_current_weather\(...\)`) Tj ET
+BT /F1 11 Tf 54 385 Td (Same pattern as above, but for current weather.) Tj ET
+BT /F2 12 Tf 54 362 Td (Function: `load_india_locations\(\)`) Tj ET
+BT /F1 11 Tf 54 338 Td (Loads all predefined Indian locations from `india_locations.json`.) Tj ET
+BT /F2 12 Tf 54 315 Td (Function: `build_india_weather_dataset\(...\)`) Tj ET
+BT /F1 11 Tf 54 291 Td (Downloads or loads weather for every listed location and combines them into one) Tj ET
+BT /F1 11 Tf 54 276 Td (dataframe.) Tj ET
+BT /F1 11 Tf 54 253 Td (This supports dataset generation and training.) Tj ET
+BT /F2 12 Tf 54 230 Td (Interview explanation) Tj ET
+BT /F1 11 Tf 54 206 Td (You can say:) Tj ET
+endstream
+endobj
+38 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 37 0 R >>
+endobj
+39 0 obj
+<< /Length 1951 >>
+stream
+BT /F1 11 Tf 54 738 Td (> The weather module standardizes weather data from Open-Meteo, caches it) Tj ET
+BT /F1 11 Tf 54 723 Td (locally, and falls back to saved CSV data if live API access fails.) Tj ET
+BT /F1 11 Tf 54 700 Td (---) Tj ET
+BT /F2 14 Tf 54 673 Td (6.2 Soil Fetching: `data/fetch_soil.py`) Tj ET
+BT /F1 11 Tf 54 645 Td (File: [`backend/data/fetch_soil.py`]\(./data/fetch_soil.py\)) Tj ET
+BT /F1 11 Tf 54 622 Td (This file fetches and normalizes soil information.) Tj ET
+BT /F2 12 Tf 54 599 Td (Important constants) Tj ET
+BT /F1 11 Tf 54 575 Td (- `SOIL_CACHE_DIR`: local soil cache folder) Tj ET
+BT /F1 11 Tf 54 560 Td (- `SOIL_PROPERTIES`: soil properties to request) Tj ET
+BT /F1 11 Tf 54 545 Td (- `SOIL_DEPTHS`: depth layers) Tj ET
+BT /F1 11 Tf 54 530 Td (- `SOIL_VALUES`: metric type, here `mean`) Tj ET
+BT /F2 12 Tf 54 507 Td (Helper: `_cache_path\(lat, lon\)`) Tj ET
+BT /F1 11 Tf 54 483 Td (Generates a cache file name for a coordinate pair.) Tj ET
+BT /F2 12 Tf 54 460 Td (Helper: `_classify_soil\(sand_pct, clay_pct, silt_pct\)`) Tj ET
+BT /F1 11 Tf 54 436 Td (This turns percentage composition into a soil type label.) Tj ET
+BT /F1 11 Tf 54 413 Td (Rules:) Tj ET
+BT /F1 11 Tf 54 390 Td (- high clay -> `clay`) Tj ET
+BT /F1 11 Tf 54 375 Td (- high sand -> `sandy`) Tj ET
+BT /F1 11 Tf 54 360 Td (- high silt -> `silty`) Tj ET
+BT /F1 11 Tf 54 345 Td (- clay + low sand -> `black`) Tj ET
+BT /F1 11 Tf 54 330 Td (- moderate silt and clay -> `alluvial`) Tj ET
+BT /F1 11 Tf 54 315 Td (- otherwise -> `loam`) Tj ET
+BT /F1 11 Tf 54 292 Td (This is a heuristic classification, not a scientific lab classification.) Tj ET
+BT /F2 12 Tf 54 269 Td (Helper: `_mean_depth_value\(layer\)`) Tj ET
+BT /F1 11 Tf 54 245 Td (Extracts the mean value across all depth samples in one soil layer.) Tj ET
+BT /F1 11 Tf 54 222 Td (It also applies the depth factor correction.) Tj ET
+BT /F2 12 Tf 54 199 Td (Helper: `_normalise_soil_payload\(payload\)`) Tj ET
+endstream
+endobj
+40 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 39 0 R >>
+endobj
+41 0 obj
+<< /Length 1857 >>
+stream
+BT /F1 11 Tf 54 738 Td (Converts the raw SoilGrids response into a compact dictionary:) Tj ET
+BT /F1 11 Tf 54 715 Td (- `soil_type`) Tj ET
+BT /F1 11 Tf 54 700 Td (- `soil_ph`) Tj ET
+BT /F1 11 Tf 54 685 Td (- `organic_matter_pct`) Tj ET
+BT /F1 11 Tf 54 670 Td (- `soil_soc_gkg`) Tj ET
+BT /F1 11 Tf 54 655 Td (- `soil_nitrogen_gkg`) Tj ET
+BT /F1 11 Tf 54 640 Td (- `soil_cec_cmolkg`) Tj ET
+BT /F1 11 Tf 54 625 Td (- `soil_sand_pct`) Tj ET
+BT /F1 11 Tf 54 610 Td (- `soil_silt_pct`) Tj ET
+BT /F1 11 Tf 54 595 Td (- `soil_clay_pct`) Tj ET
+BT /F1 11 Tf 54 580 Td (- `source`) Tj ET
+BT /F1 11 Tf 54 557 Td (It also converts soil organic carbon into estimated organic matter.) Tj ET
+BT /F2 12 Tf 54 534 Td (Function: `fetch_soil\(lat, lon\)`) Tj ET
+BT /F1 11 Tf 54 510 Td (Calls the SoilGrids API.) Tj ET
+BT /F1 11 Tf 54 487 Td (Then:) Tj ET
+BT /F1 11 Tf 54 464 Td (- normalizes the payload) Tj ET
+BT /F1 11 Tf 54 449 Td (- saves raw and normalized data in cache) Tj ET
+BT /F1 11 Tf 54 434 Td (- returns the normalized soil context) Tj ET
+BT /F2 12 Tf 54 411 Td (Function: `load_cached_soil\(lat, lon\)`) Tj ET
+BT /F1 11 Tf 54 387 Td (Loads soil context from cache.) Tj ET
+BT /F2 12 Tf 54 364 Td (Function: `get_soil_context\(lat, lon, prefer_live=True\)`) Tj ET
+BT /F1 11 Tf 54 340 Td (This is the main public function.) Tj ET
+BT /F1 11 Tf 54 317 Td (Behavior:) Tj ET
+BT /F1 11 Tf 54 294 Td (1. try live SoilGrids request) Tj ET
+BT /F1 11 Tf 54 279 Td (2. if that fails, use cached soil) Tj ET
+BT /F1 11 Tf 54 264 Td (3. if cache also fails, return a hardcoded India-like fallback loam profile) Tj ET
+BT /F1 11 Tf 54 241 Td (The fallback is very important because it keeps the system usable even when) Tj ET
+BT /F1 11 Tf 54 226 Td (third-party soil APIs fail.) Tj ET
+BT /F2 12 Tf 54 203 Td (Interview explanation) Tj ET
+BT /F1 11 Tf 54 179 Td (You can say:) Tj ET
+endstream
+endobj
+42 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 41 0 R >>
+endobj
+43 0 obj
+<< /Length 1809 >>
+stream
+BT /F1 11 Tf 54 730 Td (> The soil module queries SoilGrids, converts the raw response into useful) Tj ET
+BT /F1 11 Tf 54 715 Td (agronomic fields, caches the result, and uses a realistic fallback profile if) Tj ET
+BT /F1 11 Tf 54 700 Td (everything else fails.) Tj ET
+BT /F1 11 Tf 54 677 Td (---) Tj ET
+BT /F2 14 Tf 54 650 Td (6.3 Reference Crop Data: `data/crop_db.json`) Tj ET
+BT /F1 11 Tf 54 622 Td (File: [`backend/data/crop_db.json`]\(./data/crop_db.json\)) Tj ET
+BT /F1 11 Tf 54 599 Td (This is the crop knowledge base used by the backend.) Tj ET
+BT /F1 11 Tf 54 576 Td (It contains:) Tj ET
+BT /F1 11 Tf 54 553 Td (- crop names) Tj ET
+BT /F1 11 Tf 54 538 Td (- valid months) Tj ET
+BT /F1 11 Tf 54 523 Td (- seasons) Tj ET
+BT /F1 11 Tf 54 508 Td (- rainfall minimums) Tj ET
+BT /F1 11 Tf 54 493 Td (- temperature ranges) Tj ET
+BT /F1 11 Tf 54 478 Td (- water requirement levels) Tj ET
+BT /F1 11 Tf 54 463 Td (- preferred soil types) Tj ET
+BT /F1 11 Tf 54 448 Td (- pH ranges) Tj ET
+BT /F1 11 Tf 54 433 Td (- organic matter thresholds) Tj ET
+BT /F1 11 Tf 54 418 Td (- expected yield) Tj ET
+BT /F1 11 Tf 54 403 Td (- price) Tj ET
+BT /F1 11 Tf 54 388 Td (- cost) Tj ET
+BT /F1 11 Tf 54 373 Td (- expected profit) Tj ET
+BT /F1 11 Tf 54 358 Td (- yield stability) Tj ET
+BT /F1 11 Tf 54 343 Td (- emoji) Tj ET
+BT /F2 12 Tf 54 320 Td (Why this file is important) Tj ET
+BT /F1 11 Tf 54 296 Td (This file is the source of crop-specific business logic.) Tj ET
+BT /F1 11 Tf 54 273 Td (The model does not invent crop properties on its own.) Tj ET
+BT /F1 11 Tf 54 250 Td (Instead, the crop database gives it:) Tj ET
+BT /F1 11 Tf 54 227 Td (- agronomic constraints) Tj ET
+BT /F1 11 Tf 54 212 Td (- economic values) Tj ET
+BT /F1 11 Tf 54 197 Td (- seasonality) Tj ET
+BT /F2 12 Tf 54 174 Td (Example interpretation) Tj ET
+endstream
+endobj
+44 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 43 0 R >>
+endobj
+45 0 obj
+<< /Length 1830 >>
+stream
+BT /F1 11 Tf 54 738 Td (For a crop like Wheat:) Tj ET
+BT /F1 11 Tf 54 715 Td (- it is a rabi crop) Tj ET
+BT /F1 11 Tf 54 700 Td (- it likes cooler temperatures) Tj ET
+BT /F1 11 Tf 54 685 Td (- it prefers loam/alluvial/clay) Tj ET
+BT /F1 11 Tf 54 670 Td (- it has moderate water need) Tj ET
+BT /F1 11 Tf 54 647 Td (This makes the JSON file a compact agricultural reference table.) Tj ET
+BT /F2 12 Tf 54 624 Td (Interview explanation) Tj ET
+BT /F1 11 Tf 54 600 Td (You can say:) Tj ET
+BT /F1 11 Tf 54 577 Td (> `crop_db.json` is the agricultural knowledge base. It stores the crop season,) Tj ET
+BT /F1 11 Tf 54 562 Td (soil preference, climate needs, and economic estimates used by both training and) Tj ET
+BT /F1 11 Tf 54 547 Td (prediction.) Tj ET
+BT /F1 11 Tf 54 524 Td (---) Tj ET
+BT /F2 14 Tf 54 497 Td (6.4 Regional Knowledge: `data/regional_history.json`) Tj ET
+BT /F1 11 Tf 54 469 Td (File: [`backend/data/regional_history.json`]\(./data/regional_history.json\)) Tj ET
+BT /F1 11 Tf 54 446 Td (This file maps Indian regions to:) Tj ET
+BT /F1 11 Tf 54 423 Td (- states) Tj ET
+BT /F1 11 Tf 54 408 Td (- historical crop success) Tj ET
+BT /F1 11 Tf 54 385 Td (Each historical record contains:) Tj ET
+BT /F1 11 Tf 54 362 Td (- crop name) Tj ET
+BT /F1 11 Tf 54 347 Td (- average profit) Tj ET
+BT /F1 11 Tf 54 332 Td (- success rate) Tj ET
+BT /F1 11 Tf 54 317 Td (- notable year) Tj ET
+BT /F1 11 Tf 54 294 Td (This data helps the regional route and chat route answer region-specific) Tj ET
+BT /F1 11 Tf 54 279 Td (questions.) Tj ET
+BT /F2 12 Tf 54 256 Td (Interview explanation) Tj ET
+BT /F1 11 Tf 54 232 Td (You can say:) Tj ET
+BT /F1 11 Tf 54 209 Td (> The regional history file provides human-readable historical context so the) Tj ET
+BT /F1 11 Tf 54 194 Td (backend can explain which crops have done well in each region.) Tj ET
+endstream
+endobj
+46 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 45 0 R >>
+endobj
+47 0 obj
+<< /Length 1704 >>
+stream
+BT /F1 11 Tf 54 738 Td (---) Tj ET
+BT /F2 14 Tf 54 711 Td (6.5 India Locations: `data/india_locations.json`) Tj ET
+BT /F1 11 Tf 54 683 Td (This file lists sample Indian locations with coordinates and states.) Tj ET
+BT /F1 11 Tf 54 660 Td (It supports:) Tj ET
+BT /F1 11 Tf 54 637 Td (- weather fetching) Tj ET
+BT /F1 11 Tf 54 622 Td (- region matching) Tj ET
+BT /F1 11 Tf 54 607 Td (- training dataset generation) Tj ET
+BT /F2 12 Tf 54 584 Td (Why it matters) Tj ET
+BT /F1 11 Tf 54 560 Td (The backend needs coordinates to query weather and soil APIs.) Tj ET
+BT /F1 11 Tf 54 537 Td (The locations file provides those coordinates in a structured form.) Tj ET
+BT /F1 11 Tf 54 514 Td (---) Tj ET
+BT /F2 14 Tf 54 487 Td (7. ML Feature Engineering) Tj ET
+BT /F1 11 Tf 54 459 Td (File: [`backend/ml/features.py`]\(./ml/features.py\)) Tj ET
+BT /F1 11 Tf 54 436 Td (Feature engineering means converting raw data into useful ML inputs.) Tj ET
+BT /F1 11 Tf 54 413 Td (The model cannot learn directly from messy daily data.) Tj ET
+BT /F1 11 Tf 54 398 Td (It needs structured monthly features.) Tj ET
+BT /F2 12 Tf 54 375 Td (Main function: `engineer_features\(df\)`) Tj ET
+BT /F1 11 Tf 54 351 Td (This function takes daily weather records and returns monthly aggregated rows.) Tj ET
+BT /F2 12 Tf 54 328 Td (Step 1: Find grouping columns) Tj ET
+BT /F1 11 Tf 54 304 Td (The function groups by:) Tj ET
+BT /F1 11 Tf 54 281 Td (- location information, if present) Tj ET
+BT /F1 11 Tf 54 266 Td (- `year`) Tj ET
+BT /F1 11 Tf 54 251 Td (- `month`) Tj ET
+BT /F1 11 Tf 54 228 Td (This means each output row usually represents one location and one month.) Tj ET
+BT /F2 12 Tf 54 205 Td (Step 2: Detect weather column names) Tj ET
+endstream
+endobj
+48 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 47 0 R >>
+endobj
+49 0 obj
+<< /Length 1705 >>
+stream
+BT /F1 11 Tf 54 738 Td (Different inputs may use slightly different names.) Tj ET
+BT /F1 11 Tf 54 715 Td (The code handles aliases such as:) Tj ET
+BT /F1 11 Tf 54 692 Td (- `precipitation`) Tj ET
+BT /F1 11 Tf 54 677 Td (- `precipitation_sum`) Tj ET
+BT /F1 11 Tf 54 662 Td (- `total_rain`) Tj ET
+BT /F1 11 Tf 54 639 Td (Similarly for wind speed and humidity.) Tj ET
+BT /F1 11 Tf 54 616 Td (This makes the function resilient to different data sources.) Tj ET
+BT /F2 12 Tf 54 593 Td (Step 3: Define aggregation map) Tj ET
+BT /F1 11 Tf 54 569 Td (It calculates:) Tj ET
+BT /F1 11 Tf 54 546 Td (- `total_rain` as sum) Tj ET
+BT /F1 11 Tf 54 531 Td (- `avg_temp_max` as mean) Tj ET
+BT /F1 11 Tf 54 516 Td (- `avg_temp_min` as mean) Tj ET
+BT /F1 11 Tf 54 501 Td (- `max_wind` as max) Tj ET
+BT /F1 11 Tf 54 486 Td (- `avg_humidity` as mean if available) Tj ET
+BT /F1 11 Tf 54 471 Td (- `total_et0` as sum if available) Tj ET
+BT /F2 12 Tf 54 448 Td (Step 4: Clean the dataframe) Tj ET
+BT /F1 11 Tf 54 424 Td (The function:) Tj ET
+BT /F1 11 Tf 54 401 Td (- removes duplicates) Tj ET
+BT /F1 11 Tf 54 386 Td (- resets index) Tj ET
+BT /F1 11 Tf 54 363 Td (This avoids grouping errors.) Tj ET
+BT /F2 12 Tf 54 340 Td (Step 5: Group by month) Tj ET
+BT /F1 11 Tf 54 316 Td (Daily records are grouped into monthly rows.) Tj ET
+BT /F1 11 Tf 54 293 Td (This is the main conversion from raw daily weather to monthly climate summary.) Tj ET
+BT /F2 12 Tf 54 270 Td (Step 6: Count heat stress days) Tj ET
+BT /F1 11 Tf 54 246 Td (Heat stress is defined as:) Tj ET
+BT /F1 11 Tf 54 223 Td (- maximum temperature greater than 35 C) Tj ET
+BT /F1 11 Tf 54 200 Td (The function counts how many days in a month cross that threshold.) Tj ET
+endstream
+endobj
+50 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 49 0 R >>
+endobj
+51 0 obj
+<< /Length 1748 >>
+stream
+BT /F2 12 Tf 54 730 Td (Step 7: Compute derived features) Tj ET
+BT /F1 11 Tf 54 706 Td (The function adds:) Tj ET
+BT /F1 11 Tf 54 683 Td (- `temp_range` = max temp - min temp) Tj ET
+BT /F1 11 Tf 54 668 Td (- `water_balance` = rainfall - evapotranspiration) Tj ET
+BT /F1 11 Tf 54 653 Td (- `is_monsoon` = 1 if month is June to September) Tj ET
+BT /F2 12 Tf 54 630 Td (Step 8: Compute rolling rainfall) Tj ET
+BT /F1 11 Tf 54 606 Td (It calculates `rain_3m_rolling`.) Tj ET
+BT /F1 11 Tf 54 583 Td (This is a 3-month rolling average, which smooths rainfall trends.) Tj ET
+BT /F2 12 Tf 54 560 Td (Why these features matter) Tj ET
+BT /F1 11 Tf 54 536 Td (These features help the model understand:) Tj ET
+BT /F1 11 Tf 54 513 Td (- rainfall availability) Tj ET
+BT /F1 11 Tf 54 498 Td (- temperature stress) Tj ET
+BT /F1 11 Tf 54 483 Td (- water deficit or surplus) Tj ET
+BT /F1 11 Tf 54 468 Td (- seasonal patterns) Tj ET
+BT /F2 12 Tf 54 445 Td (Interview explanation) Tj ET
+BT /F1 11 Tf 54 421 Td (You can say:) Tj ET
+BT /F1 11 Tf 54 398 Td (> The feature engineering module converts daily weather into monthly agronomic) Tj ET
+BT /F1 11 Tf 54 383 Td (indicators like rainfall, heat stress, water balance, and monsoon season flag so) Tj ET
+BT /F1 11 Tf 54 368 Td (the ML model can learn on clean tabular data.) Tj ET
+BT /F1 11 Tf 54 345 Td (---) Tj ET
+BT /F2 14 Tf 54 318 Td (8. ML Training Pipeline) Tj ET
+BT /F1 11 Tf 54 290 Td (File: [`backend/ml/train.py`]\(./ml/train.py\)) Tj ET
+BT /F1 11 Tf 54 267 Td (This is the most important ML file in the project.) Tj ET
+BT /F1 11 Tf 54 244 Td (It builds training data, trains models, evaluates them, and saves the best one.) Tj ET
+BT /F1 11 Tf 54 221 Td (---) Tj ET
+BT /F2 12 Tf 54 198 Td (8.1 Imports) Tj ET
+endstream
+endobj
+52 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 51 0 R >>
+endobj
+53 0 obj
+<< /Length 1702 >>
+stream
+BT /F1 11 Tf 54 730 Td (The file imports:) Tj ET
+BT /F1 11 Tf 54 707 Td (- standard library modules: `json`, `datetime`, `Path`, `sys`) Tj ET
+BT /F1 11 Tf 54 692 Td (- `joblib`) Tj ET
+BT /F1 11 Tf 54 677 Td (- `pandas`) Tj ET
+BT /F1 11 Tf 54 662 Td (- scikit-learn model and metric utilities) Tj ET
+BT /F1 11 Tf 54 647 Td (- `XGBClassifier`) Tj ET
+BT /F1 11 Tf 54 632 Td (- `get_soil_context`) Tj ET
+BT /F2 12 Tf 54 609 Td (Why `sys.path` is modified) Tj ET
+BT /F1 11 Tf 54 585 Td (The script adds the backend directory to `sys.path`.) Tj ET
+BT /F1 11 Tf 54 562 Td (That allows direct execution of `train.py` from the command line without import) Tj ET
+BT /F1 11 Tf 54 547 Td (path issues.) Tj ET
+BT /F1 11 Tf 54 524 Td (---) Tj ET
+BT /F2 12 Tf 54 501 Td (8.2 Feature Columns: `FEATURE_COLS`) Tj ET
+BT /F1 11 Tf 54 477 Td (This list defines the exact inputs the model expects.) Tj ET
+BT /F1 11 Tf 54 454 Td (It includes:) Tj ET
+BT /F1 11 Tf 54 431 Td (- climate features) Tj ET
+BT /F1 11 Tf 54 416 Td (- agronomic features) Tj ET
+BT /F1 11 Tf 54 401 Td (- soil features) Tj ET
+BT /F1 11 Tf 54 386 Td (- economic features) Tj ET
+BT /F1 11 Tf 54 371 Td (- `crop_encoded`) Tj ET
+BT /F1 11 Tf 54 348 Td (This is very important because training and prediction must use the same) Tj ET
+BT /F1 11 Tf 54 333 Td (columns.) Tj ET
+BT /F2 12 Tf 54 310 Td (Important beginner concept) Tj ET
+BT /F1 11 Tf 54 286 Td (An ML model cannot accept random columns.) Tj ET
+BT /F1 11 Tf 54 263 Td (It must receive exactly the features it was trained on, in the same structure.) Tj ET
+BT /F1 11 Tf 54 240 Td (---) Tj ET
+BT /F2 12 Tf 54 217 Td (8.3 Catalog Helpers) Tj ET
+BT /F1 11 Tf 54 193 Td (#### `_load_catalog\(\)`) Tj ET
+endstream
+endobj
+54 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 53 0 R >>
+endobj
+55 0 obj
+<< /Length 1594 >>
+stream
+BT /F1 11 Tf 54 730 Td (Loads crop definitions from `crop_db.json`.) Tj ET
+BT /F1 11 Tf 54 707 Td (#### `_soil_match_score\(crop, soil_type\)`) Tj ET
+BT /F1 11 Tf 54 684 Td (Returns:) Tj ET
+BT /F1 11 Tf 54 661 Td (- `1.0` if the soil is preferred) Tj ET
+BT /F1 11 Tf 54 646 Td (- `0.4` otherwise) Tj ET
+BT /F1 11 Tf 54 623 Td (This is a soft match score.) Tj ET
+BT /F1 11 Tf 54 600 Td (#### `_ph_match_score\(crop, soil_ph\)`) Tj ET
+BT /F1 11 Tf 54 577 Td (Checks whether soil pH falls within the crops preferred range.) Tj ET
+BT /F1 11 Tf 54 554 Td (If not, it decreases the score depending on how far the pH is from the) Tj ET
+BT /F1 11 Tf 54 539 Td (acceptable range.) Tj ET
+BT /F1 11 Tf 54 516 Td (#### `_organic_match_score\(crop, organic_matter_pct\)`) Tj ET
+BT /F1 11 Tf 54 493 Td (Checks organic matter sufficiency in the same way.) Tj ET
+BT /F1 11 Tf 54 470 Td (#### `_climate_scores\(crop, row\)`) Tj ET
+BT /F1 11 Tf 54 447 Td (Computes:) Tj ET
+BT /F1 11 Tf 54 424 Td (- rain score) Tj ET
+BT /F1 11 Tf 54 409 Td (- temp score) Tj ET
+BT /F1 11 Tf 54 394 Td (- heat penalty) Tj ET
+BT /F1 11 Tf 54 379 Td (- water score) Tj ET
+BT /F1 11 Tf 54 356 Td (These scores measure how well a crop matches the climate row.) Tj ET
+BT /F1 11 Tf 54 333 Td (---) Tj ET
+BT /F2 12 Tf 54 310 Td (8.4 `build_training_data\(\)`) Tj ET
+BT /F1 11 Tf 54 286 Td (This is where the training dataset is created.) Tj ET
+BT /F1 11 Tf 54 263 Td (#### Step 1: Load monthly features) Tj ET
+BT /F1 11 Tf 54 240 Td (It reads `features.csv`.) Tj ET
+BT /F1 11 Tf 54 217 Td (That file contains monthly climate data.) Tj ET
+endstream
+endobj
+56 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 55 0 R >>
+endobj
+57 0 obj
+<< /Length 1670 >>
+stream
+BT /F1 11 Tf 54 730 Td (#### Step 2: Load crop catalog) Tj ET
+BT /F1 11 Tf 54 707 Td (It loads all crops from the crop database.) Tj ET
+BT /F1 11 Tf 54 684 Td (#### Step 3: Prepare soil cache) Tj ET
+BT /F1 11 Tf 54 661 Td (It keeps a local dictionary called `soil_cache` so repeated coordinates do not) Tj ET
+BT /F1 11 Tf 54 646 Td (trigger repeated soil API calls.) Tj ET
+BT /F1 11 Tf 54 623 Td (#### Step 4: Define fallback soil scenarios) Tj ET
+BT /F1 11 Tf 54 600 Td (The code creates several soil scenarios:) Tj ET
+BT /F1 11 Tf 54 577 Td (- loam) Tj ET
+BT /F1 11 Tf 54 562 Td (- clay) Tj ET
+BT /F1 11 Tf 54 547 Td (- sandy) Tj ET
+BT /F1 11 Tf 54 532 Td (- black) Tj ET
+BT /F1 11 Tf 54 517 Td (- alluvial) Tj ET
+BT /F1 11 Tf 54 494 Td (These help the model see a variety of soil conditions.) Tj ET
+BT /F1 11 Tf 54 471 Td (This is a form of data augmentation.) Tj ET
+BT /F1 11 Tf 54 448 Td (#### Step 5: Iterate over weather rows) Tj ET
+BT /F1 11 Tf 54 425 Td (For each monthly weather row:) Tj ET
+BT /F1 11 Tf 54 402 Td (- extract latitude and longitude) Tj ET
+BT /F1 11 Tf 54 387 Td (- find or fetch real soil data) Tj ET
+BT /F1 11 Tf 54 372 Td (- fall back to generic soil if needed) Tj ET
+BT /F1 11 Tf 54 349 Td (#### Step 6: Combine weather and soil scenarios) Tj ET
+BT /F1 11 Tf 54 326 Td (For each weather row, the script loops through:) Tj ET
+BT /F1 11 Tf 54 303 Td (- real soil) Tj ET
+BT /F1 11 Tf 54 288 Td (- each synthetic soil scenario) Tj ET
+BT /F1 11 Tf 54 265 Td (Then it loops through every crop.) Tj ET
+BT /F1 11 Tf 54 242 Td (This creates many training examples.) Tj ET
+BT /F1 11 Tf 54 219 Td (#### Step 7: Skip crops not valid for the month) Tj ET
+endstream
+endobj
+58 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 57 0 R >>
+endobj
+59 0 obj
+<< /Length 1650 >>
+stream
+BT /F1 11 Tf 54 738 Td (If the month is not in the crops allowed months, it is skipped.) Tj ET
+BT /F1 11 Tf 54 715 Td (This ensures seasonality matters.) Tj ET
+BT /F1 11 Tf 54 692 Td (#### Step 8: Compute revenue and profit features) Tj ET
+BT /F1 11 Tf 54 669 Td (The code calculates:) Tj ET
+BT /F1 11 Tf 54 646 Td (- `revenue`) Tj ET
+BT /F1 11 Tf 54 631 Td (- `profit_margin`) Tj ET
+BT /F1 11 Tf 54 608 Td (These are economics-related features.) Tj ET
+BT /F1 11 Tf 54 585 Td (#### Step 9: Compute match scores) Tj ET
+BT /F1 11 Tf 54 562 Td (It calculates:) Tj ET
+BT /F1 11 Tf 54 539 Td (- `soil_match`) Tj ET
+BT /F1 11 Tf 54 524 Td (- `ph_match`) Tj ET
+BT /F1 11 Tf 54 509 Td (- `organic_match`) Tj ET
+BT /F1 11 Tf 54 486 Td (These help the model understand soil compatibility.) Tj ET
+BT /F1 11 Tf 54 463 Td (#### Step 10: Build the composite suitability score) Tj ET
+BT /F1 11 Tf 54 440 Td (The code combines:) Tj ET
+BT /F1 11 Tf 54 417 Td (- rain) Tj ET
+BT /F1 11 Tf 54 402 Td (- temperature) Tj ET
+BT /F1 11 Tf 54 387 Td (- water balance) Tj ET
+BT /F1 11 Tf 54 372 Td (- heat stress) Tj ET
+BT /F1 11 Tf 54 357 Td (- soil match) Tj ET
+BT /F1 11 Tf 54 342 Td (- pH match) Tj ET
+BT /F1 11 Tf 54 327 Td (- organic matter match) Tj ET
+BT /F1 11 Tf 54 312 Td (- profit potential) Tj ET
+BT /F1 11 Tf 54 297 Td (- yield stability) Tj ET
+BT /F1 11 Tf 54 274 Td (This produces a number called `outcome_score`.) Tj ET
+BT /F1 11 Tf 54 251 Td (#### Step 11: Create the label) Tj ET
+BT /F1 11 Tf 54 228 Td (If `outcome_score >= 0.65`, the crop is labeled as suitable \(`1`\).) Tj ET
+BT /F1 11 Tf 54 205 Td (Otherwise it is labeled as unsuitable \(`0`\).) Tj ET
+endstream
+endobj
+60 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 59 0 R >>
+endobj
+61 0 obj
+<< /Length 1595 >>
+stream
+BT /F1 11 Tf 54 738 Td (This means the labels are generated by rules, not by real farmer outcome data.) Tj ET
+BT /F1 11 Tf 54 715 Td (That is very important in interviews.) Tj ET
+BT /F2 12 Tf 54 692 Td (Beginner interpretation) Tj ET
+BT /F1 11 Tf 54 668 Td (The project creates its own training labels because real agricultural outcome) Tj ET
+BT /F1 11 Tf 54 653 Td (labels are not available.) Tj ET
+BT /F1 11 Tf 54 630 Td (So the model learns the same agronomic rules that were used to generate the) Tj ET
+BT /F1 11 Tf 54 615 Td (labels.) Tj ET
+BT /F1 11 Tf 54 592 Td (---) Tj ET
+BT /F2 12 Tf 54 569 Td (8.5 `_build_estimators\(\)`) Tj ET
+BT /F1 11 Tf 54 545 Td (This function defines two candidate models:) Tj ET
+BT /F1 11 Tf 54 522 Td (- `XGBClassifier`) Tj ET
+BT /F1 11 Tf 54 507 Td (- `RandomForestClassifier`) Tj ET
+BT /F1 11 Tf 54 484 Td (The XGBoost model uses:) Tj ET
+BT /F1 11 Tf 54 461 Td (- many trees) Tj ET
+BT /F1 11 Tf 54 446 Td (- depth control) Tj ET
+BT /F1 11 Tf 54 431 Td (- learning rate) Tj ET
+BT /F1 11 Tf 54 416 Td (- subsampling) Tj ET
+BT /F1 11 Tf 54 393 Td (The Random Forest uses:) Tj ET
+BT /F1 11 Tf 54 370 Td (- 300 trees) Tj ET
+BT /F1 11 Tf 54 355 Td (- max depth 16) Tj ET
+BT /F1 11 Tf 54 340 Td (- balanced class weights) Tj ET
+BT /F2 12 Tf 54 317 Td (Why two models?) Tj ET
+BT /F1 11 Tf 54 293 Td (This allows comparison.) Tj ET
+BT /F1 11 Tf 54 270 Td (The project can choose the stronger performer.) Tj ET
+BT /F1 11 Tf 54 247 Td (---) Tj ET
+BT /F2 12 Tf 54 224 Td (8.6 `_evaluate_models\(X, y\)`) Tj ET
+BT /F1 11 Tf 54 200 Td (This runs cross-validation.) Tj ET
+endstream
+endobj
+62 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 61 0 R >>
+endobj
+63 0 obj
+<< /Length 1500 >>
+stream
+BT /F1 11 Tf 54 730 Td (It uses:) Tj ET
+BT /F1 11 Tf 54 707 Td (- `StratifiedKFold`) Tj ET
+BT /F1 11 Tf 54 692 Td (- `cross_validate`) Tj ET
+BT /F1 11 Tf 54 677 Td (- metrics:) Tj ET
+BT /F1 11 Tf 54 662 Td (- accuracy) Tj ET
+BT /F1 11 Tf 54 647 Td (- precision) Tj ET
+BT /F1 11 Tf 54 632 Td (- recall) Tj ET
+BT /F1 11 Tf 54 617 Td (- F1) Tj ET
+BT /F1 11 Tf 54 602 Td (- ROC AUC) Tj ET
+BT /F2 12 Tf 54 579 Td (Why cross-validation matters) Tj ET
+BT /F1 11 Tf 54 555 Td (It tests the model on multiple splits, which gives a more stable estimate than) Tj ET
+BT /F1 11 Tf 54 540 Td (one split alone.) Tj ET
+BT /F1 11 Tf 54 517 Td (---) Tj ET
+BT /F2 12 Tf 54 494 Td (8.7 `train\(\)`) Tj ET
+BT /F1 11 Tf 54 470 Td (This is the main training function.) Tj ET
+BT /F1 11 Tf 54 447 Td (#### Step 1: Create model directory) Tj ET
+BT /F1 11 Tf 54 424 Td (`MODELS_DIR.mkdir\(...\)`) Tj ET
+BT /F1 11 Tf 54 401 Td (This ensures the folder exists before saving files.) Tj ET
+BT /F1 11 Tf 54 378 Td (#### Step 2: Build training data) Tj ET
+BT /F1 11 Tf 54 355 Td (`df = build_training_data\(\)`) Tj ET
+BT /F1 11 Tf 54 332 Td (#### Step 3: Encode crop names) Tj ET
+BT /F1 11 Tf 54 309 Td (`LabelEncoder\(\)` converts crop names into integers.) Tj ET
+BT /F1 11 Tf 54 286 Td (Example:) Tj ET
+BT /F1 11 Tf 54 263 Td (- Rice -> 0) Tj ET
+BT /F1 11 Tf 54 248 Td (- Wheat -> 1) Tj ET
+BT /F1 11 Tf 54 225 Td (The exact mapping depends on the dataset.) Tj ET
+BT /F1 11 Tf 54 202 Td (#### Step 4: Split features and label) Tj ET
+endstream
+endobj
+64 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 63 0 R >>
+endobj
+65 0 obj
+<< /Length 1503 >>
+stream
+BT /F1 11 Tf 54 730 Td (- `X = df[FEATURE_COLS]`) Tj ET
+BT /F1 11 Tf 54 715 Td (- `y = df["suitable"]`) Tj ET
+BT /F1 11 Tf 54 692 Td (#### Step 5: Evaluate models) Tj ET
+BT /F1 11 Tf 54 669 Td (It computes CV metrics for XGBoost and Random Forest.) Tj ET
+BT /F1 11 Tf 54 646 Td (#### Step 6: Choose best model) Tj ET
+BT /F1 11 Tf 54 623 Td (The code currently chooses:) Tj ET
+BT /F1 11 Tf 54 600 Td (- `xgboost` if its F1 is greater than 0) Tj ET
+BT /F1 11 Tf 54 585 Td (- otherwise `random_forest`) Tj ET
+BT /F1 11 Tf 54 562 Td (This logic is simple and effectively always chooses XGBoost if it trained) Tj ET
+BT /F1 11 Tf 54 547 Td (successfully.) Tj ET
+BT /F1 11 Tf 54 524 Td (#### Step 7: Train/test split) Tj ET
+BT /F1 11 Tf 54 501 Td (It creates:) Tj ET
+BT /F1 11 Tf 54 478 Td (- training set) Tj ET
+BT /F1 11 Tf 54 463 Td (- test set) Tj ET
+BT /F1 11 Tf 54 440 Td (#### Step 8: Fit the model) Tj ET
+BT /F1 11 Tf 54 417 Td (`model.fit\(X_train, y_train\)`) Tj ET
+BT /F1 11 Tf 54 394 Td (#### Step 9: Save artifacts) Tj ET
+BT /F1 11 Tf 54 371 Td (It saves:) Tj ET
+BT /F1 11 Tf 54 348 Td (- `crop_model.pkl`) Tj ET
+BT /F1 11 Tf 54 333 Td (- `encoders.pkl`) Tj ET
+BT /F1 11 Tf 54 310 Td (#### Step 10: Save training report) Tj ET
+BT /F1 11 Tf 54 287 Td (It writes `training_report.json` with metadata and metrics.) Tj ET
+BT /F1 11 Tf 54 264 Td (#### Step 11: Return report) Tj ET
+BT /F1 11 Tf 54 241 Td (The function returns the report dictionary.) Tj ET
+BT /F2 12 Tf 54 218 Td (Important note) Tj ET
+endstream
+endobj
+66 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 65 0 R >>
+endobj
+67 0 obj
+<< /Length 1819 >>
+stream
+BT /F1 11 Tf 54 730 Td (This training file is the source of the saved model, but there is a small) Tj ET
+BT /F1 11 Tf 54 715 Td (mismatch between `run_pipeline.py` and the saved metadata formats.) Tj ET
+BT /F1 11 Tf 54 692 Td (That does not affect the notes, but it is useful to know when explaining the) Tj ET
+BT /F1 11 Tf 54 677 Td (code.) Tj ET
+BT /F2 12 Tf 54 654 Td (Interview explanation) Tj ET
+BT /F1 11 Tf 54 630 Td (You can say:) Tj ET
+BT /F1 11 Tf 54 607 Td (> The training pipeline generates crop suitability labels from agronomic rules,) Tj ET
+BT /F1 11 Tf 54 592 Td (encodes crop names, compares XGBoost and Random Forest with cross-validation,) Tj ET
+BT /F1 11 Tf 54 577 Td (then saves the best model and metadata to disk.) Tj ET
+BT /F1 11 Tf 54 554 Td (---) Tj ET
+BT /F2 14 Tf 54 527 Td (9. ML Prediction Pipeline) Tj ET
+BT /F1 11 Tf 54 499 Td (File: [`backend/ml/predict.py`]\(./ml/predict.py\)) Tj ET
+BT /F1 11 Tf 54 476 Td (This file is used when the backend needs to recommend crops.) Tj ET
+BT /F1 11 Tf 54 453 Td (It loads the trained model, creates feature rows, predicts confidence, and) Tj ET
+BT /F1 11 Tf 54 438 Td (explains the result.) Tj ET
+BT /F1 11 Tf 54 415 Td (---) Tj ET
+BT /F2 12 Tf 54 392 Td (9.1 Loading model artifacts) Tj ET
+BT /F1 11 Tf 54 368 Td (At module load time, it tries to read:) Tj ET
+BT /F1 11 Tf 54 345 Td (- `crop_model.pkl`) Tj ET
+BT /F1 11 Tf 54 330 Td (- `encoders.pkl`) Tj ET
+BT /F1 11 Tf 54 315 Td (- `model_metadata.json`) Tj ET
+BT /F1 11 Tf 54 292 Td (If loading fails, the code switches to rule-based scoring.) Tj ET
+BT /F2 12 Tf 54 269 Td (Why this matters) Tj ET
+BT /F1 11 Tf 54 245 Td (The backend will still function even if the ML model is missing.) Tj ET
+BT /F1 11 Tf 54 222 Td (That is a good resilience pattern.) Tj ET
+BT /F1 11 Tf 54 199 Td (---) Tj ET
+endstream
+endobj
+68 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 67 0 R >>
+endobj
+69 0 obj
+<< /Length 1576 >>
+stream
+BT /F2 12 Tf 54 730 Td (9.2 `REGIONAL_HISTORY`) Tj ET
+BT /F1 11 Tf 54 706 Td (The file loads `regional_history.json`.) Tj ET
+BT /F1 11 Tf 54 683 Td (This lets prediction include regional success context.) Tj ET
+BT /F1 11 Tf 54 660 Td (---) Tj ET
+BT /F2 12 Tf 54 637 Td (9.3 `_get_region_for_state\(state\)`) Tj ET
+BT /F1 11 Tf 54 613 Td (This maps a state to one of the known Indian regions.) Tj ET
+BT /F1 11 Tf 54 590 Td (If the state is found in a regions state list, that region is returned.) Tj ET
+BT /F1 11 Tf 54 567 Td (If not, it returns `None`.) Tj ET
+BT /F1 11 Tf 54 544 Td (---) Tj ET
+BT /F2 12 Tf 54 521 Td (9.4 `_get_growth_instructions\(crop_name\)`) Tj ET
+BT /F1 11 Tf 54 497 Td (This returns human-readable farming advice for certain crops.) Tj ET
+BT /F1 11 Tf 54 474 Td (Examples:) Tj ET
+BT /F1 11 Tf 54 451 Td (- rice water management) Tj ET
+BT /F1 11 Tf 54 436 Td (- wheat irrigation stages) Tj ET
+BT /F1 11 Tf 54 421 Td (- cotton pest management) Tj ET
+BT /F1 11 Tf 54 406 Td (- maize drainage) Tj ET
+BT /F1 11 Tf 54 383 Td (If a crop is not in the hardcoded map, it returns generic advice.) Tj ET
+BT /F2 12 Tf 54 360 Td (Why this is useful) Tj ET
+BT /F1 11 Tf 54 336 Td (It makes recommendations more actionable for the user.) Tj ET
+BT /F1 11 Tf 54 313 Td (---) Tj ET
+BT /F2 12 Tf 54 290 Td (9.5 `_build_feature_row\(crop, weather, soil_context\)`) Tj ET
+BT /F1 11 Tf 54 266 Td (This is a key function.) Tj ET
+BT /F1 11 Tf 54 243 Td (It constructs one complete feature dictionary for one crop at one location and) Tj ET
+BT /F1 11 Tf 54 228 Td (time.) Tj ET
+endstream
+endobj
+70 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 69 0 R >>
+endobj
+71 0 obj
+<< /Length 1650 >>
+stream
+BT /F1 11 Tf 54 738 Td (It combines:) Tj ET
+BT /F1 11 Tf 54 715 Td (- weather features) Tj ET
+BT /F1 11 Tf 54 700 Td (- crop economic fields) Tj ET
+BT /F1 11 Tf 54 685 Td (- soil features) Tj ET
+BT /F1 11 Tf 54 670 Td (- derived scores) Tj ET
+BT /F1 11 Tf 54 655 Td (- crop encoding) Tj ET
+BT /F1 11 Tf 54 632 Td (If the crop encoder exists:) Tj ET
+BT /F1 11 Tf 54 609 Td (- it tries to encode the crop name) Tj ET
+BT /F1 11 Tf 54 586 Td (If the crop name is unseen:) Tj ET
+BT /F1 11 Tf 54 563 Td (- it sets `crop_encoded = -1`) Tj ET
+BT /F1 11 Tf 54 540 Td (This prevents crashes for unknown crop labels.) Tj ET
+BT /F1 11 Tf 54 517 Td (---) Tj ET
+BT /F2 12 Tf 54 494 Td (9.6 `_rule_based_score\(crop, weather, soil_context\)`) Tj ET
+BT /F1 11 Tf 54 470 Td (If the ML model is unavailable, this function creates a fallback confidence) Tj ET
+BT /F1 11 Tf 54 455 Td (score.) Tj ET
+BT /F1 11 Tf 54 432 Td (It evaluates:) Tj ET
+BT /F1 11 Tf 54 409 Td (- rainfall match) Tj ET
+BT /F1 11 Tf 54 394 Td (- temperature match) Tj ET
+BT /F1 11 Tf 54 379 Td (- water balance) Tj ET
+BT /F1 11 Tf 54 364 Td (- heat stress) Tj ET
+BT /F1 11 Tf 54 349 Td (- soil match) Tj ET
+BT /F1 11 Tf 54 334 Td (- pH match) Tj ET
+BT /F1 11 Tf 54 319 Td (- organic matter match) Tj ET
+BT /F1 11 Tf 54 304 Td (- profit potential) Tj ET
+BT /F1 11 Tf 54 281 Td (Then it returns a score between 5 and 98.) Tj ET
+BT /F2 12 Tf 54 258 Td (Why fallback scoring exists) Tj ET
+BT /F1 11 Tf 54 234 Td (It keeps crop recommendation working even when the saved model cannot be loaded.) Tj ET
+BT /F1 11 Tf 54 211 Td (This is a major robustness feature.) Tj ET
+BT /F1 11 Tf 54 188 Td (---) Tj ET
+endstream
+endobj
+72 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 71 0 R >>
+endobj
+73 0 obj
+<< /Length 1603 >>
+stream
+BT /F2 12 Tf 54 730 Td (9.7 `_generate_reason\(crop_result, weather, soil_context\)`) Tj ET
+BT /F1 11 Tf 54 706 Td (This creates a natural-language explanation for why a crop is recommended.) Tj ET
+BT /F1 11 Tf 54 683 Td (It may mention:) Tj ET
+BT /F1 11 Tf 54 660 Td (- rainfall match) Tj ET
+BT /F1 11 Tf 54 645 Td (- temperature match) Tj ET
+BT /F1 11 Tf 54 630 Td (- suitable soil) Tj ET
+BT /F1 11 Tf 54 615 Td (- profit potential) Tj ET
+BT /F1 11 Tf 54 592 Td (This is important for explainability.) Tj ET
+BT /F2 12 Tf 54 569 Td (9.8 `_generate_ai_analysis\(...\)`) Tj ET
+BT /F1 11 Tf 54 545 Td (This produces a longer AI style explanation.) Tj ET
+BT /F1 11 Tf 54 522 Td (It references:) Tj ET
+BT /F1 11 Tf 54 499 Td (- confidence) Tj ET
+BT /F1 11 Tf 54 484 Td (- historical regional success) Tj ET
+BT /F1 11 Tf 54 469 Td (- temperature) Tj ET
+BT /F1 11 Tf 54 454 Td (- rainfall) Tj ET
+BT /F1 11 Tf 54 439 Td (- soil profile) Tj ET
+BT /F1 11 Tf 54 416 Td (It is not true generative AI.) Tj ET
+BT /F1 11 Tf 54 393 Td (It is template-based reasoning language.) Tj ET
+BT /F1 11 Tf 54 370 Td (---) Tj ET
+BT /F2 12 Tf 54 347 Td (9.9 `predict_crops\(weather_features, soil_context=None, top_n=5,) Tj ET
+BT /F2 12 Tf 54 331 Td (state=None\)`) Tj ET
+BT /F1 11 Tf 54 307 Td (This is the main public prediction function.) Tj ET
+BT /F1 11 Tf 54 284 Td (#### Step 1: Set defaults) Tj ET
+BT /F1 11 Tf 54 261 Td (If no soil context is provided, it uses an empty dictionary.) Tj ET
+BT /F1 11 Tf 54 238 Td (#### Step 2: Get month) Tj ET
+BT /F1 11 Tf 54 215 Td (The month is extracted from `weather_features`.) Tj ET
+endstream
+endobj
+74 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 73 0 R >>
+endobj
+75 0 obj
+<< /Length 1931 >>
+stream
+BT /F1 11 Tf 54 738 Td (#### Step 3: Find regional context) Tj ET
+BT /F1 11 Tf 54 715 Td (If a state is provided, it maps the state to a region and retrieves historical) Tj ET
+BT /F1 11 Tf 54 700 Td (success records.) Tj ET
+BT /F1 11 Tf 54 677 Td (#### Step 4: Loop through crops) Tj ET
+BT /F1 11 Tf 54 654 Td (For each crop:) Tj ET
+BT /F1 11 Tf 54 631 Td (- skip it if the month is not allowed) Tj ET
+BT /F1 11 Tf 54 616 Td (- build feature row) Tj ET
+BT /F1 11 Tf 54 601 Td (- if the ML model is available, predict probability) Tj ET
+BT /F1 11 Tf 54 586 Td (- otherwise use rule-based scoring) Tj ET
+BT /F1 11 Tf 54 563 Td (#### Step 5: Add crop details) Tj ET
+BT /F1 11 Tf 54 540 Td (The result includes:) Tj ET
+BT /F1 11 Tf 54 517 Td (- crop name) Tj ET
+BT /F1 11 Tf 54 502 Td (- confidence) Tj ET
+BT /F1 11 Tf 54 487 Td (- water requirement) Tj ET
+BT /F1 11 Tf 54 472 Td (- yield) Tj ET
+BT /F1 11 Tf 54 457 Td (- price) Tj ET
+BT /F1 11 Tf 54 442 Td (- cost) Tj ET
+BT /F1 11 Tf 54 427 Td (- profit) Tj ET
+BT /F1 11 Tf 54 412 Td (- season) Tj ET
+BT /F1 11 Tf 54 397 Td (- emoji) Tj ET
+BT /F1 11 Tf 54 382 Td (- growth instructions) Tj ET
+BT /F1 11 Tf 54 367 Td (- regional success rate) Tj ET
+BT /F1 11 Tf 54 352 Td (- regional average profit) Tj ET
+BT /F1 11 Tf 54 337 Td (- AI analysis) Tj ET
+BT /F1 11 Tf 54 314 Td (#### Step 6: Sort and return top results) Tj ET
+BT /F1 11 Tf 54 291 Td (The final list is sorted by confidence and trimmed to `top_n`.) Tj ET
+BT /F1 11 Tf 54 268 Td (Then each item gets a `reason`.) Tj ET
+BT /F2 12 Tf 54 245 Td (Interview explanation) Tj ET
+BT /F1 11 Tf 54 221 Td (You can say:) Tj ET
+BT /F1 11 Tf 54 198 Td (> The prediction module scores every crop that is valid for the given month,) Tj ET
+BT /F1 11 Tf 54 183 Td (uses the trained model if available, falls back to rule-based scoring otherwise,) Tj ET
+BT /F1 11 Tf 54 168 Td (and then returns the top ranked crops with explanations.) Tj ET
+endstream
+endobj
+76 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 75 0 R >>
+endobj
+77 0 obj
+<< /Length 1451 >>
+stream
+BT /F1 11 Tf 54 730 Td (---) Tj ET
+BT /F2 14 Tf 54 703 Td (10. Model Artifacts) Tj ET
+BT /F1 11 Tf 54 675 Td (The `models/` folder stores the trained outputs.) Tj ET
+BT /F2 12 Tf 54 652 Td (`crop_model.pkl`) Tj ET
+BT /F1 11 Tf 54 628 Td (This is the trained classifier.) Tj ET
+BT /F2 12 Tf 54 605 Td (`encoders.pkl`) Tj ET
+BT /F1 11 Tf 54 581 Td (This stores the label encoder used for crop names.) Tj ET
+BT /F2 12 Tf 54 558 Td (`model_metadata.json`) Tj ET
+BT /F1 11 Tf 54 534 Td (This stores summary information like:) Tj ET
+BT /F1 11 Tf 54 511 Td (- trained timestamp) Tj ET
+BT /F1 11 Tf 54 496 Td (- selected model) Tj ET
+BT /F1 11 Tf 54 481 Td (- feature columns) Tj ET
+BT /F1 11 Tf 54 466 Td (- training rows) Tj ET
+BT /F1 11 Tf 54 451 Td (- class balance) Tj ET
+BT /F1 11 Tf 54 436 Td (- crop classes) Tj ET
+BT /F2 12 Tf 54 413 Td (`training_report.json`) Tj ET
+BT /F1 11 Tf 54 389 Td (This stores more readable training metrics such as:) Tj ET
+BT /F1 11 Tf 54 366 Td (- accuracy) Tj ET
+BT /F1 11 Tf 54 351 Td (- precision) Tj ET
+BT /F1 11 Tf 54 336 Td (- recall) Tj ET
+BT /F1 11 Tf 54 321 Td (- F1) Tj ET
+BT /F1 11 Tf 54 306 Td (- ROC AUC) Tj ET
+BT /F2 12 Tf 54 283 Td (Why artifacts matter) Tj ET
+BT /F1 11 Tf 54 259 Td (Without these files, the app would have to retrain every time.) Tj ET
+BT /F1 11 Tf 54 236 Td (Saving them makes prediction fast.) Tj ET
+BT /F1 11 Tf 54 213 Td (---) Tj ET
+BT /F2 14 Tf 54 186 Td (11. Support Scripts) Tj ET
+endstream
+endobj
+78 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 77 0 R >>
+endobj
+79 0 obj
+<< /Length 1762 >>
+stream
+BT /F2 12 Tf 54 730 Td (11.1 `run_pipeline.py`) Tj ET
+BT /F1 11 Tf 54 706 Td (File: [`backend/run_pipeline.py`]\(./run_pipeline.py\)) Tj ET
+BT /F1 11 Tf 54 683 Td (This script shows the full end-to-end workflow.) Tj ET
+BT /F1 11 Tf 54 660 Td (It does four things:) Tj ET
+BT /F1 11 Tf 54 637 Td (1. loads historical weather) Tj ET
+BT /F1 11 Tf 54 622 Td (2. engineers features) Tj ET
+BT /F1 11 Tf 54 607 Td (3. trains the model) Tj ET
+BT /F1 11 Tf 54 592 Td (4. verifies saved artifacts) Tj ET
+BT /F1 11 Tf 54 569 Td (It is useful as a project demo or reproducible pipeline.) Tj ET
+BT /F2 12 Tf 54 546 Td (Note about script alignment) Tj ET
+BT /F1 11 Tf 54 522 Td (The script expects certain keys in the training report and metadata.) Tj ET
+BT /F1 11 Tf 54 499 Td (Some of those names are not perfectly aligned with the saved JSON files.) Tj ET
+BT /F1 11 Tf 54 476 Td (So this file is best treated as a high-level orchestration script rather than a) Tj ET
+BT /F1 11 Tf 54 461 Td (guaranteed plug-and-play runner.) Tj ET
+BT /F2 12 Tf 54 438 Td (11.2 `test_request.py`) Tj ET
+BT /F1 11 Tf 54 414 Td (File: [`backend/test_request.py`]\(./test_request.py\)) Tj ET
+BT /F1 11 Tf 54 391 Td (This is a simple manual API test script.) Tj ET
+BT /F1 11 Tf 54 368 Td (It sends a sample payload to the recommendation endpoint.) Tj ET
+BT /F1 11 Tf 54 345 Td (Useful fields:) Tj ET
+BT /F1 11 Tf 54 322 Td (- `district`) Tj ET
+BT /F1 11 Tf 54 307 Td (- `lat`) Tj ET
+BT /F1 11 Tf 54 292 Td (- `lon`) Tj ET
+BT /F1 11 Tf 54 277 Td (- `month`) Tj ET
+BT /F1 11 Tf 54 262 Td (- `year`) Tj ET
+BT /F1 11 Tf 54 247 Td (- `soil_type`) Tj ET
+BT /F1 11 Tf 54 232 Td (- `soil_ph`) Tj ET
+BT /F1 11 Tf 54 217 Td (- `organic_matter_pct`) Tj ET
+BT /F1 11 Tf 54 202 Td (- `irrigation_level`) Tj ET
+endstream
+endobj
+80 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 79 0 R >>
+endobj
+81 0 obj
+<< /Length 1953 >>
+stream
+BT /F1 11 Tf 54 738 Td (It reads `API_BASE_URL` from environment variables if available.) Tj ET
+BT /F1 11 Tf 54 715 Td (If not, it uses `http://localhost:8000/api`.) Tj ET
+BT /F2 12 Tf 54 692 Td (Why this file exists) Tj ET
+BT /F1 11 Tf 54 668 Td (It is a quick sanity-check tool for developers.) Tj ET
+BT /F2 12 Tf 54 645 Td (11.3 `requirements.txt`) Tj ET
+BT /F1 11 Tf 54 621 Td (This file lists Python dependencies:) Tj ET
+BT /F1 11 Tf 54 598 Td (- FastAPI) Tj ET
+BT /F1 11 Tf 54 583 Td (- Uvicorn) Tj ET
+BT /F1 11 Tf 54 568 Td (- python-dotenv) Tj ET
+BT /F1 11 Tf 54 553 Td (- requests) Tj ET
+BT /F1 11 Tf 54 538 Td (- pandas) Tj ET
+BT /F1 11 Tf 54 523 Td (- numpy) Tj ET
+BT /F1 11 Tf 54 508 Td (- scikit-learn) Tj ET
+BT /F1 11 Tf 54 493 Td (- xgboost) Tj ET
+BT /F1 11 Tf 54 478 Td (- joblib) Tj ET
+BT /F1 11 Tf 54 455 Td (These are the core packages needed by the backend.) Tj ET
+BT /F1 11 Tf 54 432 Td (---) Tj ET
+BT /F2 14 Tf 54 405 Td (12. Request Flow Examples) Tj ET
+BT /F1 11 Tf 54 377 Td (This chapter explains how one user request flows through the backend.) Tj ET
+BT /F2 12 Tf 54 354 Td (12.1 Crop recommendation flow) Tj ET
+BT /F1 11 Tf 54 330 Td (1. The frontend sends location, month, year, and optional soil details.) Tj ET
+BT /F1 11 Tf 54 315 Td (2. `/api/recommend` receives the request.) Tj ET
+BT /F1 11 Tf 54 300 Td (3. Weather history is fetched.) Tj ET
+BT /F1 11 Tf 54 285 Td (4. Weather rows are converted into monthly features.) Tj ET
+BT /F1 11 Tf 54 270 Td (5. Soil is fetched or loaded from cache.) Tj ET
+BT /F1 11 Tf 54 255 Td (6. The requested month is selected.) Tj ET
+BT /F1 11 Tf 54 240 Td (7. Each crop is scored.) Tj ET
+BT /F1 11 Tf 54 225 Td (8. The top crops are returned as JSON.) Tj ET
+BT /F2 12 Tf 54 202 Td (12.2 Weather dashboard flow) Tj ET
+BT /F1 11 Tf 54 178 Td (1. The frontend asks for weather at a location.) Tj ET
+BT /F1 11 Tf 54 163 Td (2. `/api/weather` loads history, current weather, and soil.) Tj ET
+endstream
+endobj
+82 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 81 0 R >>
+endobj
+83 0 obj
+<< /Length 2491 >>
+stream
+BT /F1 11 Tf 54 738 Td (3. Monthly trends are computed.) Tj ET
+BT /F1 11 Tf 54 723 Td (4. A chart-friendly response is returned.) Tj ET
+BT /F2 12 Tf 54 700 Td (12.3 Chat flow) Tj ET
+BT /F1 11 Tf 54 676 Td (1. User asks a question like Which crop is best?) Tj ET
+BT /F1 11 Tf 54 661 Td (2. `/api/chat` fetches weather, soil, and recommendations.) Tj ET
+BT /F1 11 Tf 54 646 Td (3. The question is matched against keywords.) Tj ET
+BT /F1 11 Tf 54 631 Td (4. A structured response is returned in English or Hindi.) Tj ET
+BT /F1 11 Tf 54 608 Td (---) Tj ET
+BT /F2 14 Tf 54 581 Td (13. Interview-Ready Explanation) Tj ET
+BT /F1 11 Tf 54 553 Td (If someone asks you to explain this backend in simple terms, you can say:) Tj ET
+BT /F1 11 Tf 54 530 Td (> AgriSense backend is a FastAPI-based agriculture recommendation system. It) Tj ET
+BT /F1 11 Tf 54 515 Td (fetches weather and soil data for a given location, converts daily weather into) Tj ET
+BT /F1 11 Tf 54 500 Td (monthly features, uses crop knowledge from JSON files, and predicts suitable) Tj ET
+BT /F1 11 Tf 54 485 Td (crops with a trained XGBoost model. If the model or live APIs fail, it has) Tj ET
+BT /F1 11 Tf 54 470 Td (fallback logic so the system still provides useful answers.) Tj ET
+BT /F1 11 Tf 54 447 Td (If they ask about ML specifically:) Tj ET
+BT /F1 11 Tf 54 424 Td (> The ML model is trained on engineered climate, soil, and crop-economic) Tj ET
+BT /F1 11 Tf 54 409 Td (features. The labels are created using agronomic rule logic, so the model learns) Tj ET
+BT /F1 11 Tf 54 394 Td (to reproduce those suitability rules. The backend saves the trained model with) Tj ET
+BT /F1 11 Tf 54 379 Td (Joblib and uses it later for fast predictions.) Tj ET
+BT /F1 11 Tf 54 356 Td (If they ask about explainability:) Tj ET
+BT /F1 11 Tf 54 333 Td (> Each recommendation includes a confidence score, reason, growth instructions,) Tj ET
+BT /F1 11 Tf 54 318 Td (and regional context, so the system is easier to trust and explain.) Tj ET
+BT /F1 11 Tf 54 295 Td (---) Tj ET
+BT /F2 14 Tf 54 268 Td (14. Limitations and Improvement Ideas) Tj ET
+BT /F1 11 Tf 54 240 Td (This section is useful for interviews because it shows that you understand the) Tj ET
+BT /F1 11 Tf 54 225 Td (project critically.) Tj ET
+BT /F2 12 Tf 54 202 Td (14.1 Current limitations) Tj ET
+BT /F1 11 Tf 54 178 Td (- The ML labels are rule-generated, not based on real field outcomes) Tj ET
+BT /F1 11 Tf 54 163 Td (- Weather requests still depend on an external API) Tj ET
+endstream
+endobj
+84 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 83 0 R >>
+endobj
+85 0 obj
+<< /Length 2682 >>
+stream
+BT /F1 11 Tf 54 738 Td (- Soil type provided by the user is not deeply used in the model input path) Tj ET
+BT /F1 11 Tf 54 723 Td (- Crop coverage is limited by the crop catalog months) Tj ET
+BT /F1 11 Tf 54 708 Td (- The chat system is keyword-based, not a real generative AI model) Tj ET
+BT /F2 12 Tf 54 685 Td (14.2 Good improvement ideas) Tj ET
+BT /F1 11 Tf 54 661 Td (- use real historical yield data) Tj ET
+BT /F1 11 Tf 54 646 Td (- add stronger offline caching) Tj ET
+BT /F1 11 Tf 54 631 Td (- add more crops and more seasons) Tj ET
+BT /F1 11 Tf 54 616 Td (- use soil type as an explicit prediction feature) Tj ET
+BT /F1 11 Tf 54 601 Td (- add model comparison dashboards) Tj ET
+BT /F1 11 Tf 54 586 Td (- add probability calibration) Tj ET
+BT /F1 11 Tf 54 571 Td (- store training run history) Tj ET
+BT /F1 11 Tf 54 556 Td (- improve multilingual responses) Tj ET
+BT /F1 11 Tf 54 533 Td (---) Tj ET
+BT /F2 14 Tf 54 506 Td (15. File-by-File Quick Summary) Tj ET
+BT /F1 11 Tf 54 478 Td (- `main.py`: creates the FastAPI app and registers routes) Tj ET
+BT /F1 11 Tf 54 463 Td (- `routes/recommend.py`: generates crop recommendations) Tj ET
+BT /F1 11 Tf 54 448 Td (- `routes/weather.py`: returns current and historical weather context) Tj ET
+BT /F1 11 Tf 54 433 Td (- `routes/regional.py`: returns region-level crop insights) Tj ET
+BT /F1 11 Tf 54 418 Td (- `routes/chat.py`: answers agri questions in English or Hindi) Tj ET
+BT /F1 11 Tf 54 403 Td (- `data/fetch_weather.py`: fetches and caches weather data) Tj ET
+BT /F1 11 Tf 54 388 Td (- `data/fetch_soil.py`: fetches and caches soil data) Tj ET
+BT /F1 11 Tf 54 373 Td (- `data/crop_db.json`: crop knowledge base) Tj ET
+BT /F1 11 Tf 54 358 Td (- `data/regional_history.json`: historical regional crop data) Tj ET
+BT /F1 11 Tf 54 343 Td (- `data/india_locations.json`: supported locations) Tj ET
+BT /F1 11 Tf 54 328 Td (- `ml/features.py`: turns daily weather into monthly ML features) Tj ET
+BT /F1 11 Tf 54 313 Td (- `ml/train.py`: builds training data and trains the model) Tj ET
+BT /F1 11 Tf 54 298 Td (- `ml/predict.py`: scores crops and creates explanations) Tj ET
+BT /F1 11 Tf 54 283 Td (- `run_pipeline.py`: runs the full pipeline end to end) Tj ET
+BT /F1 11 Tf 54 268 Td (- `test_request.py`: manual request test script) Tj ET
+BT /F1 11 Tf 54 253 Td (- `requirements.txt`: Python dependencies) Tj ET
+BT /F1 11 Tf 54 230 Td (---) Tj ET
+BT /F2 14 Tf 54 203 Td (16. Final Takeaway) Tj ET
+BT /F1 11 Tf 54 175 Td (This backend is a strong educational project because it combines:) Tj ET
+BT /F1 11 Tf 54 152 Td (- API development) Tj ET
+BT /F1 11 Tf 54 137 Td (- data fetching) Tj ET
+BT /F1 11 Tf 54 122 Td (- caching) Tj ET
+endstream
+endobj
+86 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 85 0 R >>
+endobj
+87 0 obj
+<< /Length 820 >>
+stream
+BT /F1 11 Tf 54 738 Td (- feature engineering) Tj ET
+BT /F1 11 Tf 54 723 Td (- classification modeling) Tj ET
+BT /F1 11 Tf 54 708 Td (- rule-based fallback logic) Tj ET
+BT /F1 11 Tf 54 693 Td (- explainable outputs) Tj ET
+BT /F1 11 Tf 54 670 Td (It is especially good for interviews because it demonstrates:) Tj ET
+BT /F1 11 Tf 54 647 Td (- practical FastAPI work) Tj ET
+BT /F1 11 Tf 54 632 Td (- ML pipeline understanding) Tj ET
+BT /F1 11 Tf 54 617 Td (- data preprocessing knowledge) Tj ET
+BT /F1 11 Tf 54 602 Td (- system design thinking) Tj ET
+BT /F1 11 Tf 54 587 Td (- graceful fallback design) Tj ET
+BT /F1 11 Tf 54 564 Td (If you study this document and the code together, you should be able to answer) Tj ET
+BT /F1 11 Tf 54 549 Td (beginner to medium interview questions about the project with confidence.) Tj ET
+endstream
+endobj
+88 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 87 0 R >>
+endobj
+xref
+0 89
+0000000000 65535 f 
+0000000015 00000 n 
+0000000064 00000 n 
+0000000408 00000 n 
+0000000478 00000 n 
+0000000553 00000 n 
+0000002759 00000 n 
+0000002895 00000 n 
+0000004986 00000 n 
+0000005122 00000 n 
+0000006989 00000 n 
+0000007126 00000 n 
+0000008874 00000 n 
+0000009012 00000 n 
+0000010904 00000 n 
+0000011042 00000 n 
+0000012792 00000 n 
+0000012930 00000 n 
+0000014954 00000 n 
+0000015092 00000 n 
+0000016979 00000 n 
+0000017117 00000 n 
+0000018826 00000 n 
+0000018964 00000 n 
+0000020755 00000 n 
+0000020893 00000 n 
+0000022567 00000 n 
+0000022705 00000 n 
+0000024674 00000 n 
+0000024812 00000 n 
+0000026794 00000 n 
+0000026932 00000 n 
+0000028859 00000 n 
+0000028997 00000 n 
+0000031138 00000 n 
+0000031276 00000 n 
+0000033146 00000 n 
+0000033284 00000 n 
+0000035107 00000 n 
+0000035245 00000 n 
+0000037249 00000 n 
+0000037387 00000 n 
+0000039297 00000 n 
+0000039435 00000 n 
+0000041297 00000 n 
+0000041435 00000 n 
+0000043318 00000 n 
+0000043456 00000 n 
+0000045213 00000 n 
+0000045351 00000 n 
+0000047109 00000 n 
+0000047247 00000 n 
+0000049048 00000 n 
+0000049186 00000 n 
+0000050941 00000 n 
+0000051079 00000 n 
+0000052726 00000 n 
+0000052864 00000 n 
+0000054587 00000 n 
+0000054725 00000 n 
+0000056428 00000 n 
+0000056566 00000 n 
+0000058214 00000 n 
+0000058352 00000 n 
+0000059905 00000 n 
+0000060043 00000 n 
+0000061599 00000 n 
+0000061737 00000 n 
+0000063609 00000 n 
+0000063747 00000 n 
+0000065376 00000 n 
+0000065514 00000 n 
+0000067217 00000 n 
+0000067355 00000 n 
+0000069011 00000 n 
+0000069149 00000 n 
+0000071133 00000 n 
+0000071271 00000 n 
+0000072775 00000 n 
+0000072913 00000 n 
+0000074728 00000 n 
+0000074866 00000 n 
+0000076872 00000 n 
+0000077010 00000 n 
+0000079554 00000 n 
+0000079692 00000 n 
+0000082427 00000 n 
+0000082565 00000 n 
+0000083437 00000 n 
+trailer
+<< /Size 89 /Root 1 0 R >>
+startxref
+83575
+%%EOF

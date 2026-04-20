@@ -1,5 +1,11 @@
-from fastapi import APIRouter, HTTPException, Query
+import asyncio
 import datetime
+
+from fastapi import APIRouter, HTTPException, Query
+
+from data.fetch_soil import get_soil_context
+from data.fetch_weather import get_current_weather, get_weather_data
+from ml.features import engineer_features
 
 router = APIRouter()
 
@@ -11,15 +17,22 @@ async def get_weather(
     location_name: str = Query("Selected Location", description="Location label"),
 ):
     try:
-        from data.fetch_soil import get_soil_context
-        from data.fetch_weather import get_current_weather, get_weather_data
-        from ml.features import engineer_features
-
         ten_years_ago = (datetime.date.today() - datetime.timedelta(days=365*10)).strftime("%Y-01-01")
-        
-        history_df, history_meta = get_weather_data(lat, lon, start=ten_years_ago, location_name=location_name)
-        current_weather, current_meta = get_current_weather(lat, lon)
-        soil_context, soil_meta = get_soil_context(lat, lon)
+
+        history_task = asyncio.to_thread(
+            get_weather_data,
+            lat,
+            lon,
+            start=ten_years_ago,
+            location_name=location_name,
+        )
+        current_task = asyncio.to_thread(get_current_weather, lat, lon)
+        soil_task = asyncio.to_thread(get_soil_context, lat, lon)
+        (history_df, history_meta), (current_weather, current_meta), (soil_context, soil_meta) = await asyncio.gather(
+            history_task,
+            current_task,
+            soil_task,
+        )
 
         if history_df.empty:
             return {
@@ -43,8 +56,6 @@ async def get_weather(
                 "historical_trend": [],
                 "error": "No historical weather data available for this region"
             }
-        
-        latest = features.sort_values(["year", "month"]).iloc[-1]
         
         # Generate trend for the chart
         # We'll take the last 10 years (120 months) and ensure no NaN values for JSON

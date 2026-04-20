@@ -1,5 +1,6 @@
 import hashlib
 import json
+import os
 from datetime import date, timedelta
 from pathlib import Path
 
@@ -16,6 +17,7 @@ DEFAULT_END_DATE = (date.today() - timedelta(days=5)).isoformat()
 DEFAULT_CACHE_LAT = 29.15
 DEFAULT_CACHE_LON = 75.73
 DEFAULT_CURRENT_WEATHER = {"current": {}, "forecast": []}
+DEFAULT_UPSTREAM_TIMEOUT = float(os.getenv("UPSTREAM_TIMEOUT_SECONDS", "8"))
 
 
 def _cache_path(lat: float, lon: float, suffix: str = "history") -> Path:
@@ -135,7 +137,7 @@ def fetch_weather(
     lon: float,
     start: str = "2016-01-01",
     end: str | None = None,
-    timeout: int = 30,
+    timeout: float | None = None,
     location_name: str | None = None,
     state: str | None = None,
     persist_cache: bool = True,
@@ -157,7 +159,11 @@ def fetch_weather(
         "timezone": "Asia/Kolkata",
     }
 
-    response = requests.get(url, params=params, timeout=timeout)
+    response = requests.get(
+        url,
+        params=params,
+        timeout=timeout if timeout is not None else DEFAULT_UPSTREAM_TIMEOUT,
+    )
     response.raise_for_status()
     payload = response.json()
     frame = pd.DataFrame(payload["daily"])
@@ -176,7 +182,7 @@ def fetch_weather(
     return frame
 
 
-def fetch_current_weather(lat: float, lon: float, timeout: int = 30) -> dict:
+def fetch_current_weather(lat: float, lon: float, timeout: float | None = None) -> dict:
     url = "https://api.open-meteo.com/v1/forecast"
     params = {
         "latitude": lat,
@@ -201,7 +207,11 @@ def fetch_current_weather(lat: float, lon: float, timeout: int = 30) -> dict:
         "forecast_days": 3,
     }
 
-    response = requests.get(url, params=params, timeout=timeout)
+    response = requests.get(
+        url,
+        params=params,
+        timeout=timeout if timeout is not None else DEFAULT_UPSTREAM_TIMEOUT,
+    )
     response.raise_for_status()
     payload = response.json()
 
