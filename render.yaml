@@ -14,5 +14,5 @@ services:
         sync: false   # set in Render dashboard
       - key: LOG_LEVEL
         value: info
-    healthCheckPath: /health
+    healthCheckPath: /api/health
     autoDeploy: true
