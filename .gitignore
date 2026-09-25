@@ -1,5 +1,4 @@
 # Environment
-.env
 backend/.env
 frontend/.env
 backend/.env.*
@@ -27,9 +26,10 @@ backend/data/*.pkl
 backend/data/*.joblib
 
 # OS / editor
-.vscode/
 Thumbs.db
 Desktop.ini
 branch_structure.json
 temp_auto_push.bat
 temp_interactive_push.bat
+config.bat
+node_modules
